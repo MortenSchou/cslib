@@ -43,11 +43,22 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `ExecutableCoverability` | decidable coverability for executable nets |
 | `ExecutableBoundedness` | decidable boundedness for executable nets |
 | [`Search`](../../Foundations/Data/Search.lean) | `searchIter`/`searchNat`: searches that `decide` can evaluate, used by the decision procedures |
+| `Automaton` | firing languages of bounded nets are regular |
+| `Equivalence` | bisimilarity and HML equivalence of markings |
 | `FreeChoice` | free-choice nets and Commoner's theorem: an ordinary free-choice net is live iff every siphon contains a marked trap |
 | [`Ranking`](../../Foundations/Data/Set/Ranking.lean) | `exists_rank`: ranking a finite set by successive exits, used for the necessity half of Commoner's theorem |
 | `ExecutableStructure` | decidable structural properties (conservative, ordinary, free-choice, siphon-trap) |
+| `SoundnessNotions` | workflow nets (`IsWFNet`) and the weak, `k`-, relaxed, lazy and easy notions of soundness |
+| `Soundness` | soundness of workflow nets ⟺ short circuit live and bounded |
+| [`FiniteClosure`](../../Foundations/Relation/FiniteClosure.lean) | reachability in finite relations is decidable (`ReflTransGen`), used to decide `IsWFNet` |
+| `ExecutableForward` | dot notation for executable nets: `N.Bounded M₀`, `N.Sound i o`, … forward to `N.toPetriNet` |
+| `ExecutableLanguage` | membership in firing languages of executable nets is decidable |
+| `ExecutableReachability` | reachability and deadlock reachability for bounded executable nets |
+| `ExecutableSoundnessNotions` | decision procedures for the notions of soundness on bounded executable nets |
+| `ExecutableSoundness` | soundness of executable nets is decidable |
 
 ## Plans and notes
 
 - Not yet formalised: reachability for unbounded nets, the Karp–Miller tree, coloured and
-  inhibitor-arc nets.
+  inhibitor-arc nets, and a decision procedure for generalized soundness (the notion is defined, and
+  refuted whenever up-to-`k` soundness fails for some `k`).

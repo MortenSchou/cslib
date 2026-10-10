@@ -28,7 +28,9 @@ A coercion from `ExecPetriNet` to `PetriNet` cannot be provided with any of Lean
 (`Coe`, `CoeOut`, `CoeTail`, `CoeHead`, `CoeDep`, `CoeT`): Lean only inserts a coercion when the
 target type is fully known, but the type of transitions of the target net is determined by the net
 itself. Instead, the net slot of the notations `M [t⟩[N] M'` and `M ⇝[N] M'` is elaborated by
-`net%`, which applies the instance of `PetriNet.ToPetriNet` for executable nets.
+`net%`, which applies the instance of `PetriNet.ToPetriNet` for executable nets, and the module
+`ExecutableForward` forwards the properties of nets to executable nets, so that `N.Bounded M₀` can
+be written for `N.toPetriNet.Bounded M₀`.
 
 ## Main statements
 
