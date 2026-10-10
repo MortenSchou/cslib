@@ -28,6 +28,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Elab` | the `net%` elaborator, which lets the notation accept other kinds of nets |
 | `Basic` | nets, markings, enabling, firing; token counts; notation |
 | `Semantics` | marking graph, reachability, boundedness, safeness, liveness, conservative nets |
+| `Automaton` | firing languages of bounded nets are regular |
+| `Equivalence` | bisimilarity and HML equivalence of markings |
 
 ## Plans and notes
 

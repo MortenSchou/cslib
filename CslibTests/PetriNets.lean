@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Morten Schou
 -/
 
+import Cslib.Computability.PetriNets.Automaton
 import Cslib.Computability.PetriNets.Basic
+import Cslib.Computability.PetriNets.Equivalence
 import Cslib.Computability.PetriNets.Semantics
 
 namespace CslibTests
@@ -108,5 +110,65 @@ example : prodCons.Dead ⦅consuming⦆ := by
   cases t
   · simpa [prodCons] using h producing
   · simpa [prodCons] using h buffer
+
+/-! ### Firing languages as automata -/
+
+/-- Two items in the system. -/
+def M₀ : Marking Pl := ⦅producing, producing⦆
+
+/-- Every firing language of the (bounded) producer/consumer net is regular. -/
+example (F : Set (Marking Pl)) : (prodCons.firingLanguage M₀ F).IsRegular :=
+  isRegular_firingLanguage (prodCons_conservative.kBounded _).bounded F
+
+/-- The sequence `produce, produce, consume` leads from `M₀` to `⦅buffer, consuming⦆`. -/
+example : [produce, produce, consume] ∈ prodCons.firingLanguage M₀ {⦅buffer, consuming⦆} := by
+  refine ⟨⦅buffer, consuming⦆, rfl, ?_⟩
+  refine .stepL (μ := produce) (s2 := ⦅producing, buffer⦆) ⟨⦅producing⦆, ?_, ?_⟩
+    (.stepL (μ := produce) (s2 := ⦅buffer, buffer⦆) ⟨⦅buffer⦆, ?_, ?_⟩
+      (.single _ (show ⦅buffer, buffer⦆ [consume⟩[prodCons] ⦅buffer, consuming⦆ from
+        ⟨⦅buffer⦆, ?_, ?_⟩)))
+  all_goals ext p; cases p <;> simp [M₀, prodCons, Multiset.toFinsupp_apply]
+
+/-- The sequence `[consume]` is not even firable from `M₀`. -/
+example : [consume] ∉ prodCons.firingLanguage M₀ {⦅buffer, consuming⦆} := by
+  rintro ⟨M, -, h⟩
+  cases h with
+  | stepL htr _ =>
+    have := (fires_iff.1 htr).1 buffer
+    simp [M₀, prodCons, Multiset.toFinsupp_apply] at this
+
+/-! ### Behavioural equivalence -/
+
+/-- A marking with no `producing` and no `buffer` token is dead. -/
+theorem prodCons_dead (M : Marking Pl) (h₁ : M producing = 0) (h₂ : M buffer = 0) :
+    prodCons.Dead M := by
+  rw [dead_iff]
+  intro t h
+  cases t
+  · simpa [prodCons, Multiset.toFinsupp_apply, h₁] using h producing
+  · simpa [prodCons, Multiset.toFinsupp_apply, h₂] using h buffer
+
+theorem dead_one : prodCons.Dead ⦅consuming⦆ :=
+  prodCons_dead _ (by simp) (by simp)
+
+theorem dead_two : prodCons.Dead ⦅consuming, consuming⦆ :=
+  prodCons_dead _ (by simp) (by simp)
+
+open LTS in
+/-- The markings with one and with two `consuming` tokens are different but bisimilar. -/
+example : ∃ M₁ M₂ : Marking Pl, M₁ ≠ M₂ ∧ (M₁ ~[prodCons.lts] M₂) := by
+  refine ⟨⦅consuming⦆, ⦅consuming, consuming⦆, fun h => ?_, bisimilar_of_dead _ dead_one dead_two⟩
+  simpa [Multiset.toFinsupp_apply] using DFunLike.congr_fun h consuming
+
+/-- Bisimilar markings have the same traces. -/
+example : prodCons.lts.traces ⦅consuming⦆ = prodCons.lts.traces ⦅consuming, consuming⦆ :=
+  (bisimilar_iff_traces_eq _ _ _).1 (bisimilar_of_dead _ dead_one dead_two)
+
+open Logic.Modal in
+/-- Bisimilar dead markings satisfy the same Hennessy-Milner formulas. -/
+example : TheoryEq (HML.Model.mk prodCons.lts (fun _ (_ : Unit) => True)).toModal
+    ⦅consuming⦆ ⦅consuming, consuming⦆ :=
+  (theoryEq_iff_bisimilar prodCons _ (fun _ _ => Iff.rfl) _ _).2
+    (bisimilar_of_dead _ dead_one dead_two)
 
 end CslibTests
