@@ -28,6 +28,11 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Elab` | the `net%` elaborator, which lets the notation accept other kinds of nets |
 | `Basic` | nets, markings, enabling, firing; token counts; notation |
 | `Semantics` | marking graph, reachability, boundedness, safeness, liveness, conservative nets |
+| `Monotonicity` | adding tokens preserves firing; boundedness is downward closed |
+| `Coverability` | coverability and the pumping lemma |
+| `CoverabilityBasis` | upward-closed sets of markings have finite bases (Dickson's lemma) |
+| `BackwardCoverability` | the backward coverability iteration and its termination |
+| `Unboundedness` | a net is unbounded iff some reachable marking reaches a strictly larger one |
 
 ## Plans and notes
 
