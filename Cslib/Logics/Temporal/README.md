@@ -13,6 +13,13 @@ Temporal logics specify the behaviour of transition systems over time.
   models (`ModelChecking`), invariance under the bisimulations of `LTS`s (`Bisimulation`), and
   `EF`/`AG` as reachability (`Reachability`).
 
+- [LTL](LTL): Linear Temporal Logic. Formulas and their ω-languages (`Basic`), safety and liveness
+  (`SafetyLiveness`), and evaluation on the maximal paths of a model, with CTL as path quantifiers
+  over LTL (`Model`). Model checking on finite models is decidable (`ModelChecking`), by the tableau
+  construction: a path satisfying a formula is a fair path in a product graph, and fair paths in
+  finite graphs are reachable cycles (`FairPath`). LTL is also invariant under the bisimulations of
+  `LTS`s (`Bisimulation`).
+
 ## Notation
 
 All notation is scoped. Judgements follow the convention of [Modal](../Modal) and are used with
@@ -21,10 +28,14 @@ All notation is scoped. Judgements follow the convention of [Modal](../Modal) an
 | Notation | Meaning |
 |---|---|
 | `⇓CTL[m,s ⊨ φ]` | the state `s` of the model `m` satisfies the CTL formula `φ` |
+| `⇓LTL[w ⊨ φ]` | the ω-sequence `w` of sets of atoms satisfies the LTL formula `φ` |
+| `⇓LTL[m,s ⊨∀ φ]` | all maximal paths from `s` in `m` satisfy `φ` |
+| `⇓LTL[m,s ⊨∃ φ]` | some maximal path from `s` in `m` satisfies `φ` |
 
-The operators are in `CTL.Formula` (`EX`, `EF`, `EG`, `AX`, `AF`, `AG`, `E[φ U ψ]`, `A[φ U ψ]`).
-The unary operators bind tighter than any connective. In `E[φ U ψ]` and `A[φ U ψ]`, the first
-argument needs parentheses if it is a conjunction or weaker.
+The operators are in `CTL.Formula` (`EX`, `EF`, `EG`, `AX`, `AF`, `AG`, `E[φ U ψ]`, `A[φ U ψ]`) and
+in `LTL.Formula` (`X`, `F`, `G`, `φ U ψ`, `φ W ψ`, `φ R ψ`). The unary operators bind tighter than
+any connective. In `E[φ U ψ]` and `A[φ U ψ]`, the first argument needs parentheses if it is a
+conjunction or weaker, so that the two sets of notation can be opened together.
 
 ## Design
 
@@ -42,6 +53,7 @@ argument needs parentheses if it is a conjunction or weaker.
 
 ## Plans and notes
 
-- Model checking on finite models, invariance under bisimulation, and the linear-time logic LTL
-  are planned.
+- Model checking on finite models and invariance under bisimulation are planned.
+- LTL defines exactly the star-free ω-regular languages; neither this nor the translation of LTL
+  to first-order logic of the order of the naturals (Kamp) is formalised.
 - CTL\* and the modal μ-calculus, of which CTL and LTL are fragments, would unify the logics.

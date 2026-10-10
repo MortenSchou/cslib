@@ -171,6 +171,7 @@ public import Cslib.Foundations.Data.PFunctor.Free
 public import Cslib.Foundations.Data.PFunctor.Free.Fold
 public import Cslib.Foundations.Data.PFunctor.Free.W
 public import Cslib.Foundations.Data.Polynomial.Monotone
+public import Cslib.Foundations.Data.Search
 public import Cslib.Foundations.Data.Set.Saturation
 public import Cslib.Foundations.Data.StackTape
 public import Cslib.Foundations.Lint.Basic
@@ -185,6 +186,7 @@ public import Cslib.Foundations.Relation.Confluence
 public import Cslib.Foundations.Relation.Defs
 public import Cslib.Foundations.Relation.Domain
 public import Cslib.Foundations.Relation.Euclidean
+public import Cslib.Foundations.Relation.FiniteClosure
 public import Cslib.Foundations.Relation.Preserves
 public import Cslib.Foundations.Relation.RelatesInSteps
 public import Cslib.Foundations.Relation.Restriction
@@ -295,6 +297,12 @@ public import Cslib.Logics.Temporal.CTL.Modal
 public import Cslib.Logics.Temporal.CTL.ModelChecking
 public import Cslib.Logics.Temporal.CTL.Reachability
 public import Cslib.Logics.Temporal.CTL.Semantics
+public import Cslib.Logics.Temporal.LTL.Basic
+public import Cslib.Logics.Temporal.LTL.Bisimulation
+public import Cslib.Logics.Temporal.LTL.FairPath
+public import Cslib.Logics.Temporal.LTL.Model
+public import Cslib.Logics.Temporal.LTL.ModelChecking
+public import Cslib.Logics.Temporal.LTL.SafetyLiveness
 public import Cslib.MachineLearning.PACLearning.Defs
 public import Cslib.MachineLearning.PACLearning.VCDimension
 public import Cslib.MachineLearning.PACLearning.VersionSpace

@@ -46,7 +46,7 @@ example : ¬ ⇓CTL[lasso,1 ⊨ Formula.deadlock] := by
   exact fun h => h 2 (by simp [lasso])
 
 /-- The deadlock is reachable from the start. -/
-example : ⇓CTL[lasso,0 ⊨ EF stop] := by
+theorem lasso_ef_stop : ⇓CTL[lasso,0 ⊨ EF stop] := by
   rw [Satisfies.ef_iff_reachable]
   refine ⟨3, .head (b := 1) (by simp [lasso]) (.single (by simp [lasso])), ?_⟩
   simp [lasso]
