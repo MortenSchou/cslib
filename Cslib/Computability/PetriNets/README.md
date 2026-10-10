@@ -28,6 +28,9 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Elab` | the `net%` elaborator, which lets the notation accept other kinds of nets |
 | `Basic` | nets, markings, enabling, firing; token counts; notation |
 | `Semantics` | marking graph, reachability, boundedness, safeness, liveness, conservative nets |
+| `StateEquation` | incidence, effect of a firing sequence, T-invariants |
+| `PlaceInvariants` | weighted token counts preserved by firing, and the bounds they give |
+| `Structure` | siphons, traps, and a deadlock-freedom criterion for ordinary nets |
 
 ## Plans and notes
 
