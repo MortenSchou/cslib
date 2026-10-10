@@ -16,7 +16,7 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 - **Semantics through `LTS`.** The marking graph of a net is an `LTS` whose labels are the
   transitions (`PetriNet.lts`). Reachability, bisimilarity, trace equivalence, and HML are therefore
   inherited from [Foundations](../../Foundations) and [Logics](../../Logics). The marking graph is
-  deterministic.
+  deterministic, so bisimilarity of markings coincides with trace equivalence.
 - **An executable variant.** `ExecPetriNet` uses multisets, so it is computable. It is related to
   `PetriNet` by `ExecPetriNet.toPetriNet` and is used for the verified decision procedures and for
   tests that can be checked by `decide`.
@@ -33,6 +33,9 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Semantics` | marking graph, reachability, boundedness, safeness, liveness, conservative nets |
 | `Executable` | multiset-based nets and a computable firing rule |
 | `Monotonicity` | adding tokens preserves firing; boundedness is downward closed |
+| `StateEquation` | incidence, effect of a firing sequence, T-invariants |
+| `PlaceInvariants` | weighted token counts preserved by firing, and the bounds they give |
+| `Structure` | siphons, traps, and a deadlock-freedom criterion for ordinary nets |
 | `Coverability` | coverability and the pumping lemma |
 | `CoverabilityBasis` | upward-closed sets of markings have finite bases (Dickson's lemma) |
 | `BackwardCoverability` | the backward coverability iteration and its termination |
@@ -40,6 +43,9 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `ExecutableCoverability` | decidable coverability for executable nets |
 | `ExecutableBoundedness` | decidable boundedness for executable nets |
 | [`Search`](../../Foundations/Data/Search.lean) | `searchIter`/`searchNat`: searches that `decide` can evaluate, used by the decision procedures |
+| `FreeChoice` | free-choice nets and Commoner's theorem: an ordinary free-choice net is live iff every siphon contains a marked trap |
+| [`Ranking`](../../Foundations/Data/Set/Ranking.lean) | `exists_rank`: ranking a finite set by successive exits, used for the necessity half of Commoner's theorem |
+| `ExecutableStructure` | decidable structural properties (conservative, ordinary, free-choice, siphon-trap) |
 
 ## Plans and notes
 
