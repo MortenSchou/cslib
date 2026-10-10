@@ -15,7 +15,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
   `Place →₀ ℕ`, so places and transitions can be arbitrary types, finite or infinite.
 - **Semantics through `LTS`.** The marking graph of a net is an `LTS` whose labels are the
   transitions (`PetriNet.lts`). Reachability, bisimilarity, trace equivalence, and HML are therefore
-  inherited from [Foundations](../../Foundations) and [Logics](../../Logics). The marking graph is
+  inherited from [Foundations](../../Foundations) and [Logics](../../Logics), including the
+  temporal logics CTL and LTL of [Logics/Temporal](../../Logics/Temporal). The marking graph is
   deterministic, so bisimilarity of markings coincides with trace equivalence.
 - **An executable variant.** `ExecPetriNet` uses multisets, so it is computable. It is related to
   `PetriNet` by `ExecPetriNet.toPetriNet` and is used for the verified decision procedures and for
@@ -56,6 +57,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `ExecutableReachability` | reachability and deadlock reachability for bounded executable nets |
 | `ExecutableSoundnessNotions` | decision procedures for the notions of soundness on bounded executable nets |
 | `ExecutableSoundness` | soundness of executable nets is decidable |
+| `CTL` | the marking graph as a CTL model; easy and `k`-soundness, liveness and deadlock-freeness as CTL formulas; CTL satisfaction is decidable for bounded executable nets |
+| `LTL` | LTL on the maximal firing sequences of a net; LTL model checking is decidable for bounded executable nets |
 
 ## Plans and notes
 
