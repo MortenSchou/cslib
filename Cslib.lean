@@ -124,6 +124,8 @@ public import Cslib.Computability.PetriNets.CoverabilityBasis
 public import Cslib.Computability.PetriNets.Elab
 public import Cslib.Computability.PetriNets.Monotonicity
 public import Cslib.Computability.PetriNets.Semantics
+public import Cslib.Computability.PetriNets.Soundness
+public import Cslib.Computability.PetriNets.SoundnessNotions
 public import Cslib.Computability.PetriNets.Unboundedness
 public import Cslib.Computability.QueryComplexity.Defs
 public import Cslib.Computability.QueryComplexity.Measures

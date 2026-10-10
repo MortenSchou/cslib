@@ -33,6 +33,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `CoverabilityBasis` | upward-closed sets of markings have finite bases (Dickson's lemma) |
 | `BackwardCoverability` | the backward coverability iteration and its termination |
 | `Unboundedness` | a net is unbounded iff some reachable marking reaches a strictly larger one |
+| `SoundnessNotions` | workflow nets (`IsWFNet`) and the weak, `k`-, relaxed, lazy and easy notions of soundness |
+| `Soundness` | soundness of workflow nets ⟺ short circuit live and bounded |
 
 ## Plans and notes
 
