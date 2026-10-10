@@ -3,6 +3,7 @@ import CslibTests.BooleanCircuits
 import CslibTests.CCS
 import CslibTests.CCS.VendingMachine
 import CslibTests.CLL
+import CslibTests.CTL
 import CslibTests.CircuitComplexity
 import CslibTests.CircuitComposition
 import CslibTests.CircuitCounting
