@@ -125,6 +125,7 @@ public import Cslib.Computability.PetriNets.Elab
 public import Cslib.Computability.PetriNets.Executable
 public import Cslib.Computability.PetriNets.ExecutableBoundedness
 public import Cslib.Computability.PetriNets.ExecutableCoverability
+public import Cslib.Computability.PetriNets.Labelled
 public import Cslib.Computability.PetriNets.Monotonicity
 public import Cslib.Computability.PetriNets.Semantics
 public import Cslib.Computability.PetriNets.Unboundedness
@@ -237,6 +238,7 @@ public import Cslib.Foundations.Syntax.HasWellFormed
 public import Cslib.Init
 public import Cslib.Languages.CCS.Basic
 public import Cslib.Languages.CCS.BehaviouralTheory
+public import Cslib.Languages.CCS.PetriNet
 public import Cslib.Languages.CCS.Semantics
 public import Cslib.Languages.CombinatoryLogic.Basic
 public import Cslib.Languages.CombinatoryLogic.Computable

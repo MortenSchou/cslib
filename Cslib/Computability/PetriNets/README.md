@@ -39,9 +39,11 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Unboundedness` | a net is unbounded iff some reachable marking reaches a strictly larger one |
 | `ExecutableCoverability` | decidable coverability for executable nets |
 | `ExecutableBoundedness` | decidable boundedness for executable nets |
+| `Labelled` | marking graph with transitions relabelled (used by `Languages/CCS/PetriNet`) |
 | [`Search`](../../Foundations/Data/Search.lean) | `searchIter`/`searchNat`: searches that `decide` can evaluate, used by the decision procedures |
 
 ## Plans and notes
 
 - Not yet formalised: reachability for unbounded nets, the Karp–Miller tree, coloured and
-  inhibitor-arc nets.
+  inhibitor-arc nets, and a *finite* net encoding of CCS (the encoding in `Languages/CCS/PetriNet`
+  has all processes as places).
