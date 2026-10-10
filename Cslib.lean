@@ -153,6 +153,7 @@ public import Cslib.Foundations.Data.Fin.Tuple
 public import Cslib.Foundations.Data.FinFun.Basic
 public import Cslib.Foundations.Data.FinFun.Update
 public import Cslib.Foundations.Data.Finset.Involution
+public import Cslib.Foundations.Data.Finset.Iterate
 public import Cslib.Foundations.Data.HasFresh
 public import Cslib.Foundations.Data.List.IsChainFromTo
 public import Cslib.Foundations.Data.Nat.Asymptotics
@@ -288,8 +289,10 @@ public import Cslib.Logics.Propositional.Defs
 public import Cslib.Logics.Propositional.NaturalDeduction.Basic
 public import Cslib.Logics.Propositional.NaturalDeduction.Theory
 public import Cslib.Logics.Temporal.CTL.Basic
+public import Cslib.Logics.Temporal.CTL.Bisimulation
 public import Cslib.Logics.Temporal.CTL.Denotation
 public import Cslib.Logics.Temporal.CTL.Modal
+public import Cslib.Logics.Temporal.CTL.ModelChecking
 public import Cslib.Logics.Temporal.CTL.Reachability
 public import Cslib.Logics.Temporal.CTL.Semantics
 public import Cslib.MachineLearning.PACLearning.Defs

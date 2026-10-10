@@ -9,8 +9,9 @@ Temporal logics specify the behaviour of transition systems over time.
 
 - [CTL](CTL): Computation Tree Logic. Formulas (`Basic`), a satisfaction relation over maximal
   paths (`Semantics`), and the fixpoint semantics with its agreement with the path semantics
-  (`Denotation`), the embedding of basic modal logic (`Modal`), and `EF`/`AG` as reachability
-  (`Reachability`).
+  (`Denotation`), the embedding of basic modal logic (`Modal`), a decision procedure for finite
+  models (`ModelChecking`), invariance under the bisimulations of `LTS`s (`Bisimulation`), and
+  `EF`/`AG` as reachability (`Reachability`).
 
 ## Notation
 
