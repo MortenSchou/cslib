@@ -17,6 +17,9 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
   transitions (`PetriNet.lts`). Reachability, bisimilarity, trace equivalence, and HML are therefore
   inherited from [Foundations](../../Foundations) and [Logics](../../Logics). The marking graph is
   deterministic.
+- **An executable variant.** `ExecPetriNet` uses multisets, so it is computable. It is related to
+  `PetriNet` by `ExecPetriNet.toPetriNet` and is used for the verified decision procedures and for
+  tests that can be checked by `decide`.
 - **Notation.** The scoped notation (`•[N] t`, `M [t⟩[N] M'`, `M ⇝[N] M'`, `⦅a, b⦆`) takes its net
   through the `net%` elaborator, which accepts anything with a `PetriNet.ToPetriNet` instance, so
   that other presentations of nets can use the same notation.
@@ -28,11 +31,15 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Elab` | the `net%` elaborator, which lets the notation accept other kinds of nets |
 | `Basic` | nets, markings, enabling, firing; token counts; notation |
 | `Semantics` | marking graph, reachability, boundedness, safeness, liveness, conservative nets |
+| `Executable` | multiset-based nets and a computable firing rule |
 | `Monotonicity` | adding tokens preserves firing; boundedness is downward closed |
 | `Coverability` | coverability and the pumping lemma |
 | `CoverabilityBasis` | upward-closed sets of markings have finite bases (Dickson's lemma) |
 | `BackwardCoverability` | the backward coverability iteration and its termination |
 | `Unboundedness` | a net is unbounded iff some reachable marking reaches a strictly larger one |
+| `ExecutableCoverability` | decidable coverability for executable nets |
+| `ExecutableBoundedness` | decidable boundedness for executable nets |
+| [`Search`](../../Foundations/Data/Search.lean) | `searchIter`/`searchNat`: searches that `decide` can evaluate, used by the decision procedures |
 
 ## Plans and notes
 

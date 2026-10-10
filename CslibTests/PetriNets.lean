@@ -8,6 +8,9 @@ import Cslib.Computability.PetriNets.BackwardCoverability
 import Cslib.Computability.PetriNets.Basic
 import Cslib.Computability.PetriNets.Coverability
 import Cslib.Computability.PetriNets.CoverabilityBasis
+import Cslib.Computability.PetriNets.Executable
+import Cslib.Computability.PetriNets.ExecutableBoundedness
+import Cslib.Computability.PetriNets.ExecutableCoverability
 import Cslib.Computability.PetriNets.Monotonicity
 import Cslib.Computability.PetriNets.Semantics
 import Cslib.Computability.PetriNets.Unboundedness
@@ -196,5 +199,81 @@ example : prodCons.Coverable ⦅producing⦆ ⦅consuming⦆ :=
 example : ∃ n, prodCons.backStep (prodCons.backSeq ⦅consuming⦆ n) = prodCons.backSeq ⦅consuming⦆ n ∧
     ∀ M₀, prodCons.Coverable M₀ ⦅consuming⦆ ↔ M₀ ∈ prodCons.backSeq ⦅consuming⦆ n :=
   exists_backSeq_fixpoint _
+
+/-! ### Executable nets
+
+An `ExecPetriNet` has multisets as arc weights, so firing is computable and the properties of the
+net can be decided. -/
+
+/-- The producer/consumer net with multisets as arc weights. -/
+def prodConsExec : ExecPetriNet Pl Tr where
+  pre | produce => {producing} | consume => {buffer}
+  post | produce => {buffer} | consume => {consuming}
+
+/-- It is the same net as `prodCons`. -/
+example : prodConsExec.toPetriNet = prodCons := by
+  have h : ∀ t, prodConsExec.toPetriNet.pre t = prodCons.pre t ∧
+      prodConsExec.toPetriNet.post t = prodCons.post t := by
+    intro t; cases t <;> exact ⟨rfl, rfl⟩
+  cases h₁ : prodConsExec.toPetriNet
+  cases h₂ : prodCons
+  simp only [PetriNet.mk.injEq]
+  constructor <;> funext t <;> [have := (h t).1; have := (h t).2] <;> simp_all
+
+/-- Two items in the system, as a multiset. -/
+def Mx : Multiset Pl := {producing, producing}
+
+example : prodConsExec.enabled Mx produce = true := by decide
+example : prodConsExec.enabled Mx consume = false := by decide
+
+example : (prodConsExec.run Mx [produce, consume]).isSome = true := by decide
+example : (prodConsExec.run Mx [consume]).isNone = true := by decide
+example :
+    prodConsExec.run Mx [produce, produce, consume] = some ({buffer, consuming} : Multiset Pl) := by
+  decide
+
+/-- The computable run is witnessed in the weighted semantics, with the net given to the notation as
+an executable net. -/
+example : Mx [produce⟩[prodConsExec] ⦅producing, buffer⦆ :=
+  ExecPetriNet.fires_iff.2 (by decide)
+
+/-- Enabledness of a transition at a marking given by a multiset. -/
+example : ⦅producing⦆ [produce⟩[prodConsExec] :=
+  ExecPetriNet.enabled_toPetriNet_iff.2 (by decide)
+
+/-- Reachability and its notation, for an executable net. -/
+example : ⦅producing⦆ ⇝[prodConsExec] ⦅consuming⦆ := by
+  have h₁ : ⦅producing⦆ [produce⟩[prodConsExec] ⦅buffer⦆ := ExecPetriNet.fires_iff.2 (by decide)
+  have h₂ : ⦅buffer⦆ [consume⟩[prodConsExec] ⦅consuming⦆ := ExecPetriNet.fires_iff.2 (by decide)
+  exact h₁.reachable.trans h₂.reachable
+
+/-! ### Decidable coverability -/
+
+/-- The backward iteration from `{consuming}` has stabilised after two steps. -/
+example : prodConsExec.Stable (prodConsExec.basisSeq {consuming} 2) := by decide
+
+/-- `{producing}` can cover `{consuming}`. -/
+example : prodConsExec.toPetriNet.Coverable ⦅producing⦆ ⦅consuming⦆ := by decide
+
+/-- The empty marking cannot cover `{consuming}`. -/
+example : ¬ prodConsExec.toPetriNet.Coverable ⦅⦆ ⦅consuming⦆ := by decide
+
+/-! ### Decidable boundedness -/
+
+/-- The reachable markings of the producer/consumer net from `Mx` stop growing after four steps. -/
+example : prodConsExec.Closed Mx 4 := by decide
+
+/-- A source transition that creates a token from nothing, as an executable net. -/
+def sourceExec : ExecPetriNet Unit Unit where
+  pre _ := 0
+  post _ := {()}
+
+/-- The source net has a pumping pair already within one step. -/
+example : sourceExec.PumpWithin 0 1 := by decide
+
+/-- Boundedness is decided outright, in both directions. -/
+example : prodConsExec.toPetriNet.Bounded Mx := by decide
+
+example : ¬ sourceExec.toPetriNet.Bounded ⦅⦆ := by decide
 
 end CslibTests
