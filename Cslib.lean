@@ -32,6 +32,7 @@ public import Cslib.Computability.Automata.NA.Basic
 public import Cslib.Computability.Automata.NA.BuchiEquiv
 public import Cslib.Computability.Automata.NA.BuchiInter
 public import Cslib.Computability.Automata.NA.Concat
+public import Cslib.Computability.Automata.NA.Degeneralize
 public import Cslib.Computability.Automata.NA.EpsilonTransducer
 public import Cslib.Computability.Automata.NA.Hist
 public import Cslib.Computability.Automata.NA.Loop
@@ -302,6 +303,7 @@ public import Cslib.Logics.Temporal.LTL.Bisimulation
 public import Cslib.Logics.Temporal.LTL.FairPath
 public import Cslib.Logics.Temporal.LTL.Model
 public import Cslib.Logics.Temporal.LTL.ModelChecking
+public import Cslib.Logics.Temporal.LTL.OmegaRegular
 public import Cslib.Logics.Temporal.LTL.SafetyLiveness
 public import Cslib.MachineLearning.PACLearning.Defs
 public import Cslib.MachineLearning.PACLearning.VCDimension

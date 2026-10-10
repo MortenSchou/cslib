@@ -18,7 +18,8 @@ Temporal logics specify the behaviour of transition systems over time.
   over LTL (`Model`). Model checking on finite models is decidable (`ModelChecking`), by the tableau
   construction: a path satisfying a formula is a fair path in a product graph, and fair paths in
   finite graphs are reachable cycles (`FairPath`). LTL is also invariant under the bisimulations of
-  `LTS`s (`Bisimulation`).
+  `LTS`s (`Bisimulation`). The ω-language of a formula is ω-regular (`OmegaRegular`): the tableau,
+  for the model of letters, is a Büchi automaton.
 
 ## Notation
 
@@ -54,6 +55,7 @@ conjunction or weaker, so that the two sets of notation can be opened together.
 ## Plans and notes
 
 - Model checking on finite models and invariance under bisimulation are planned.
-- LTL defines exactly the star-free ω-regular languages; neither this nor the translation of LTL
-  to first-order logic of the order of the naturals (Kamp) is formalised.
+- LTL defines exactly the star-free ω-regular languages. Only the inclusion in the ω-regular
+  languages is formalised, not the converse, nor the translation of LTL to first-order logic of the
+  order of the naturals (Kamp).
 - CTL\* and the modal μ-calculus, of which CTL and LTL are fragments, would unify the logics.

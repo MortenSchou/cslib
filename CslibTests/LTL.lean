@@ -8,6 +8,7 @@ import CslibTests.CTL
 import Cslib.Logics.Temporal.LTL.Bisimulation
 import Cslib.Logics.Temporal.LTL.Model
 import Cslib.Logics.Temporal.LTL.ModelChecking
+import Cslib.Logics.Temporal.LTL.OmegaRegular
 import Cslib.Logics.Temporal.LTL.SafetyLiveness
 
 namespace CslibTests.LTL
@@ -133,5 +134,17 @@ example : ¬ ⇓LTL[mutex true,(0, 0) ⊨∀ F (.atom 0 : Formula (Fin 2))] := b
 
 /-- But the first process is critical infinitely often on some path. -/
 example : ⇓LTL[mutex true,(0, 0) ⊨∃ G F (.atom 0 : Formula (Fin 2))] := by decide
+
+/-! ## ω-regularity
+
+The language of an LTL formula is ω-regular, hence so are the languages
+obtained from it by the closure properties of ω-regular languages, such as complement, which is
+not an LTL operation on formulas of this form. -/
+
+open Cslib in
+/-- The sequences in which the first process is not critical infinitely often form an ω-regular
+language. -/
+example : ((G F (.atom 0 : Formula (Fin 2))).language)ᶜ.IsRegular :=
+  ωLanguage.IsRegular.compl (Formula.isRegular_language _)
 
 end CslibTests.LTL
