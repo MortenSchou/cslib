@@ -5,7 +5,9 @@ Authors: Morten Schou
 -/
 
 import Cslib.Computability.PetriNets.Basic
+import Cslib.Computability.PetriNets.ConflictFree
 import Cslib.Computability.PetriNets.PlaceInvariants
+import Cslib.Computability.PetriNets.ReachabilityConditions
 import Cslib.Computability.PetriNets.Semantics
 import Cslib.Computability.PetriNets.StateEquation
 import Cslib.Computability.PetriNets.Structure
@@ -31,6 +33,30 @@ instance : Fintype Pl := ⟨{producing, buffer, consuming}, fun x => by cases x 
 def prodCons : PetriNet Pl Tr where
   pre | produce => ⦅producing⦆ | consume => ⦅buffer⦆
   post | produce => ⦅buffer⦆ | consume => ⦅consuming⦆
+
+/-! ### Conflict-free nets -/
+
+theorem prodCons_conflictFree : prodCons.ConflictFree := by
+  intro t u p h₁ h₂
+  cases t <;> cases u <;> cases p <;> simp_all [prodCons]
+
+example : prodCons.Firable ⦅producing⦆ (Finsupp.single produce 1 + Finsupp.single consume 1) := by
+  have h₁ : ⦅producing⦆ [produce⟩[prodCons] ⦅buffer⦆ :=
+    ⟨0, by ext p; cases p <;> simp [prodCons],
+      by ext p; cases p <;> simp [prodCons]⟩
+  have h₂ : ⦅buffer⦆ [consume⟩[prodCons] ⦅consuming⦆ :=
+    ⟨0, by ext p; cases p <;> simp [prodCons],
+      by ext p; cases p <;> simp [prodCons]⟩
+  exact ⟨[produce, consume], ⦅consuming⦆, .stepL h₁ (.single _ h₂), by simp⟩
+
+/-! ### Flow-acyclic nets -/
+
+/-- The producer feeds the consumer but not conversely, so the net is flow-acyclic and its
+reachability is decided by the state equation (`FlowAcyclic.reachable_iff`). -/
+theorem prodCons_flowAcyclic : prodCons.FlowAcyclic :=
+  Subrelation.wf (r := InvImage (· < ·) fun t : Tr => if t = produce then 0 else 1)
+    (fun {u t} ⟨p, hu, ht⟩ => by cases u <;> cases t <;> cases p <;> simp_all [prodCons, InvImage])
+    (InvImage.wf _ wellFounded_lt)
 
 /-! ### Notation -/
 
