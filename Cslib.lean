@@ -117,6 +117,13 @@ public import Cslib.Computability.Machines.Turing.MultiTape.TapeLemmas
 public import Cslib.Computability.Machines.Turing.SingleTape.Defs
 public import Cslib.Computability.Machines.Turing.SingleTape.Deterministic
 public import Cslib.Computability.Machines.Turing.SingleTape.NonDeterministic
+public import Cslib.Computability.Presburger.Computable
+public import Cslib.Computability.Presburger.Cooper
+public import Cslib.Computability.Presburger.Decide
+public import Cslib.Computability.Presburger.Encoding
+public import Cslib.Computability.Presburger.PrimrecArith
+public import Cslib.Computability.Presburger.Semantics
+public import Cslib.Computability.Presburger.Syntax
 public import Cslib.Computability.QueryComplexity.Defs
 public import Cslib.Computability.QueryComplexity.Measures
 public import Cslib.Computability.URM.Basic
