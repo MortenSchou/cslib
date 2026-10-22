@@ -125,6 +125,14 @@ public import Cslib.Computability.URM.Defs
 public import Cslib.Computability.URM.Execution
 public import Cslib.Computability.URM.StandardForm
 public import Cslib.Computability.URM.StraightLine
+public import Cslib.Computability.VAS.AsympDefinable
+public import Cslib.Computability.VAS.Basic
+public import Cslib.Computability.VAS.Defs
+public import Cslib.Computability.VAS.Dimension
+public import Cslib.Computability.VAS.Linearization
+public import Cslib.Computability.VAS.Periodic
+public import Cslib.Computability.VAS.Run
+public import Cslib.Computability.VAS.WellOrder
 public import Cslib.Crypto.Negligible
 public import Cslib.Crypto.Primitives.PRG.Asymptotic
 public import Cslib.Crypto.Primitives.PRG.Basic
