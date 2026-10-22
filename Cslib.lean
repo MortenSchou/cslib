@@ -134,8 +134,13 @@ public import Cslib.Computability.URM.StandardForm
 public import Cslib.Computability.URM.StraightLine
 public import Cslib.Computability.VAS.AsympDefinable
 public import Cslib.Computability.VAS.Basic
+public import Cslib.Computability.VAS.Decidable
 public import Cslib.Computability.VAS.Defs
 public import Cslib.Computability.VAS.Dimension
+public import Cslib.Computability.VAS.Effective
+public import Cslib.Computability.VAS.EffectiveComputable
+public import Cslib.Computability.VAS.EffectiveForm
+public import Cslib.Computability.VAS.EffectiveSearch
 public import Cslib.Computability.VAS.Euler
 public import Cslib.Computability.VAS.Linearization
 public import Cslib.Computability.VAS.Periodic

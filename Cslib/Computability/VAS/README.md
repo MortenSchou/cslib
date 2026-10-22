@@ -7,9 +7,20 @@ Authors: Morten Schou
 # Vector addition systems
 
 This directory formalises vector addition systems (VAS) and the combinatorics needed for Leroux's
-proof that reachability of VAS and Petri nets is decidable, by Presburger inductive invariants: if
-`y` is not reachable from `x`, then there is a semilinear set containing `x`, omitting `y`, and
-closed under moves.
+proof that reachability of VAS (and hence of Petri nets) is decidable, by Presburger inductive
+invariants: if `y` is not reachable from `x`, then there is a semilinear set containing `x`,
+omitting `y`, and closed under moves.
+
+## Main results
+
+- `VAS.not_reach_iff` (`Separators.lean`): a configuration `y` is not reachable from `x` iff some
+  semilinear (Presburger-definable) set contains `x`, omits `y` and is closed under moves.
+- `VAS.not_reaches_rePred` (`Decidable.lean`): non-reachability of coded VAS is recursively
+  enumerable. The certificates are checked by the decision procedure for Presburger arithmetic of
+  `Cslib.Computability.Presburger`. The decidability of reachability of Petri nets built on this is
+  in `Cslib.Computability.PetriNets.ReachabilityDecidable`.
+- Complexity is not addressed: the algorithm enumerates certificates and checks them with a
+  triply exponential procedure; no bounds are claimed.
 
 Definitions are in `Defs.lean`. Reachability, invariants and separators are defined there; the
 remaining files are listed below. A VAS gives a labelled transition system (`VAS.lts`, labelled by
@@ -66,3 +77,19 @@ Some statements differ from the paper in minor ways: `ProdGraph` has a `WellForm
 (transitions go between states), which `euler_lemma` assumes, since the lemma is false without it;
 several statements take `[Finite ι]` (or `[Fintype ι]`), a `DecidableEq` instance on the transitions
 of a production graph (for Parikh images), or use `classical`.
+
+## Effective layer
+
+The semi-algorithm for non-reachability. A VAS is coded by `VASCode` (dimension and list of
+actions), a semilinear set by `SLCode` (list of pairs of a base and periods); lists are read as
+vectors with missing entries `0` (`vecN`, `vecZ`). The certificate check is a Presburger sentence
+decided by `Cslib.Computability.Presburger`. `EffectiveSearch.lean` does not depend on Leroux's
+theorem; `Decidable.lean` combines it with `VAS.not_reach_iff`.
+
+| File | Contents |
+|------|----------|
+| `Effective.lean` | `vecN`, `vecZ`, `SLCode`, `SLCode.set`, `isSemilinearSet_iff_exists_code`, `VASCode`, `VASCode.Certificate` |
+| `EffectiveForm.lean` | the translation of a code to a Presburger formula (`setForm`, `eval_setForm`), the inductiveness sentence (`inductiveForm`), the certificate sentence (`certForm`, `valid_certForm_iff`) |
+| `EffectiveComputable.lean` | `primrec_certForm`, `computablePred_certificate` |
+| `EffectiveSearch.lean` | `rePred_exists_of_computablePred`, `ReachInput`, `rePred_exists_certificate` |
+| `Decidable.lean` | `ReachInput.not_reaches_iff_exists_certificate` and `VAS.not_reaches_rePred` |
