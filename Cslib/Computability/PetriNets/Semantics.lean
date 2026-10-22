@@ -8,6 +8,7 @@ module
 
 public import Cslib.Computability.PetriNets.Basic
 public import Cslib.Foundations.Semantics.LTS.Basic
+public import Cslib.Foundations.Semantics.LTS.Relation
 public import Mathlib.Data.Set.Finite.Lattice
 public import Mathlib.SetTheory.Cardinal.Finite
 
@@ -69,25 +70,22 @@ theorem Reachable.refl (N : PetriNet Place Transition) (M : Marking Place) : M �
 @[grind <=]
 theorem Reachable.trans {N : PetriNet Place Transition} {M₁ M₂ M₃ : Marking Place}
     (h₁ : M₁ ⇝[N] M₂) (h₂ : M₂ ⇝[N] M₃) : M₁ ⇝[N] M₃ :=
-  let ⟨ts₁, h₁⟩ := h₁
-  let ⟨ts₂, h₂⟩ := h₂
-  ⟨ts₁ ++ ts₂, LTS.MTr.comp _ h₁ h₂⟩
+  LTS.CanReach.trans h₁ h₂
 
 /-- A single firing is a reachability step. -/
 @[grind →]
 theorem Fires.reachable {N : PetriNet Place Transition} {M M' : Marking Place} {t : Transition}
     (h : M [t⟩[N] M') : M ⇝[N] M' :=
-  ⟨[t], .single _ h⟩
+  LTS.CanReach.single h
 
 /-- Induction along reachability: a property preserved by every firing is preserved by
 reachability. -/
 theorem Reachable.invariant {N : PetriNet Place Transition} {P : Marking Place → Prop}
     (hP : ∀ {M t M'}, M [t⟩[N] M' → P M → P M') {M M' : Marking Place}
     (h : M ⇝[N] M') (hM : P M) : P M' := by
-  obtain ⟨ts, h⟩ := h
-  induction h with
+  induction h using LTS.CanReach.induction_on with
   | refl => exact hM
-  | stepL htr _ ih => exact ih (hP htr hM)
+  | tail _ hab ih => obtain ⟨t, hab⟩ := hab; exact hP hab ih
 
 /-- A net is `k`-bounded at `M₀` if no reachable marking has more than `k` tokens in any place. -/
 def KBounded (N : PetriNet Place Transition) (M₀ : Marking Place) (k : ℕ) : Prop :=

@@ -39,12 +39,6 @@ namespace PetriNet
 
 variable {Place : Type*} {Transition : Type*} {N : PetriNet Place Transition}
 
-/-- A single firing step is a reachability step. -/
-theorem unlabelledTr_reachable {M M' : Marking Place} (h : N.lts.UnlabelledTr M M') :
-    M ⇝[N] M' :=
-  let ⟨_, h⟩ := h
-  h.reachable
-
 /-- A marking has finitely many successors when there are finitely many transitions. -/
 theorem step_finite [Finite Transition] (M : Marking Place) :
     {M' | N.lts.UnlabelledTr M M'}.Finite := by
@@ -77,28 +71,26 @@ theorem exists_next [Finite Place] [Finite Transition] {M₀ M : Marking Place}
       ⋃ M' ∈ {M' | M ⇝[N] M' ∧ M' ⇝[N] M},
         ⋃ y ∈ {y | N.lts.UnlabelledTr M' y ∧ ¬ y ⇝[N] M}, {z | y ⇝[N] z} := by
     intro z hz
-    have key : ∀ z, Relation.ReflTransGen N.lts.UnlabelledTr M z →
+    have key : ∀ z, M ⇝[N] z →
         (M ⇝[N] z ∧ z ⇝[N] M) ∨
         ∃ M', (M ⇝[N] M' ∧ M' ⇝[N] M) ∧ ∃ y, N.lts.UnlabelledTr M' y ∧
           ¬ y ⇝[N] M ∧ y ⇝[N] z := by
       intro z hz
-      induction hz with
+      induction hz using LTS.CanReach.induction_on with
       | refl => exact Or.inl ⟨.refl _ _, .refl _ _⟩
-      | tail hz hstep ih =>
-        rename_i z' w
+      | @tail z' w _ hstep ih =>
         rcases ih with hs | ⟨M', hM', y, hy, hn, hyz⟩
         · by_cases hw : w ⇝[N] M
-          · exact Or.inl ⟨hs.1.trans (unlabelledTr_reachable hstep), hw⟩
+          · exact Or.inl ⟨hs.1.tail hstep, hw⟩
           · exact Or.inr ⟨z', hs, w, hstep, hw, .refl _ _⟩
-        · exact Or.inr ⟨M', hM', y, hy, hn, hyz.trans (unlabelledTr_reachable hstep)⟩
-    rcases key z ((LTS.reflTransGen_unlabelledTr_iff N.lts).2 hz) with
-        hs | ⟨M', hM', y, hy, hn, hyz⟩
+        · exact Or.inr ⟨M', hM', y, hy, hn, hyz.tail hstep⟩
+    rcases key z hz with hs | ⟨M', hM', y, hy, hn, hyz⟩
     · exact Or.inl hs
     · exact Or.inr (Set.mem_biUnion hM' (Set.mem_biUnion ⟨hy, hn⟩ hyz))
   refine hinf (((hscc.union (hscc.biUnion fun M' hM' => ?_))).subset hsub)
   refine ((step_finite M').subset fun y (hy : y ∈ {y | N.lts.UnlabelledTr M' y ∧ ¬ y ⇝[N] M}) =>
     hy.1).biUnion fun y hy => ?_
-  exact hcon y (hM'.1.trans (unlabelledTr_reachable hy.1)) hy.2
+  exact hcon y (hM'.1.tail hy.1) hy.2
 
 /-- An unbounded net over finitely many places and transitions has a pumping pair. -/
 theorem exists_pump_of_not_bounded [Finite Place] [Finite Transition] {M₀ : Marking Place}
