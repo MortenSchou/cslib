@@ -21,6 +21,7 @@ import CslibTests.HasWellFormed
 import CslibTests.ImportWithMathlib
 import CslibTests.InferenceSystem
 import CslibTests.LTS
+import CslibTests.LTSCanReach
 import CslibTests.LambdaCalculus
 import CslibTests.MLL
 import CslibTests.Modal
