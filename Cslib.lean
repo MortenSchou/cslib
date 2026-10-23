@@ -141,6 +141,8 @@ public import Cslib.Computability.PetriNets.Reduction
 public import Cslib.Computability.PetriNets.ReductionTransition
 public import Cslib.Computability.PetriNets.RemovePlace
 public import Cslib.Computability.PetriNets.Semantics
+public import Cslib.Computability.PetriNets.SeriesPlaceReduction
+public import Cslib.Computability.PetriNets.SeriesReduction
 public import Cslib.Computability.PetriNets.Soundness
 public import Cslib.Computability.PetriNets.SoundnessNotions
 public import Cslib.Computability.PetriNets.StateEquation

@@ -18,6 +18,7 @@ performed in different ways.
 ## Main definitions
 
 - `PetriNet.labelledLts`: the marking graph of a net whose transitions are relabelled by a function.
+- `PetriNet.hide`: the labelling that makes one transition invisible and keeps all others.
 -/
 
 @[expose] public section
@@ -42,6 +43,20 @@ theorem Fires.labelledLts {N : PetriNet Place Transition} {ℓ : Transition → 
     {M M' : Marking Place} {t : Transition} (h : M [t⟩[N] M') :
     (N.labelledLts ℓ).Tr M (ℓ t) M' :=
   ⟨t, rfl, h⟩
+
+open scoped Classical in
+/-- The labelling that hides the transition `t₂` (label `none`) and keeps every other transition
+visible, labelled by itself. -/
+noncomputable def hide (t₂ : Transition) : Transition → Option {t // t ≠ t₂} :=
+  fun t => if h : t = t₂ then none else some ⟨t, h⟩
+
+/-- The hidden transition has no label. -/
+@[simp] theorem hide_self (t₂ : Transition) : hide t₂ t₂ = none := by
+  simp [hide]
+
+/-- Every other transition is labelled by itself. -/
+theorem hide_of_ne {t t₂ : Transition} (h : t ≠ t₂) : hide t₂ t = some ⟨t, h⟩ := by
+  simp [hide, h]
 
 end PetriNet
 
