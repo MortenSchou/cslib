@@ -163,6 +163,7 @@ public import Cslib.Foundations.Data.OmegaSequence.Defs
 public import Cslib.Foundations.Data.OmegaSequence.Flatten
 public import Cslib.Foundations.Data.OmegaSequence.InfOcc
 public import Cslib.Foundations.Data.OmegaSequence.Init
+public import Cslib.Foundations.Data.OmegaSequence.Stuttering
 public import Cslib.Foundations.Data.OmegaSequence.Temporal
 public import Cslib.Foundations.Data.OmegaSequence.Topology
 public import Cslib.Foundations.Data.PFunctor.Basic
@@ -295,6 +296,7 @@ public import Cslib.Logics.Temporal.CTL.Semantics
 public import Cslib.Logics.Temporal.LTL.Basic
 public import Cslib.Logics.Temporal.LTL.Model
 public import Cslib.Logics.Temporal.LTL.SafetyLiveness
+public import Cslib.Logics.Temporal.LTL.Stuttering
 public import Cslib.MachineLearning.PACLearning.Defs
 public import Cslib.MachineLearning.PACLearning.VCDimension
 public import Cslib.MachineLearning.PACLearning.VersionSpace
