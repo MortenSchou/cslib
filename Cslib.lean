@@ -137,10 +137,12 @@ public import Cslib.Computability.PetriNets.FreeChoice
 public import Cslib.Computability.PetriNets.Labelled
 public import Cslib.Computability.PetriNets.Monotonicity
 public import Cslib.Computability.PetriNets.PlaceInvariants
+public import Cslib.Computability.PetriNets.ReducesTo
 public import Cslib.Computability.PetriNets.Reduction
 public import Cslib.Computability.PetriNets.ReductionTransition
 public import Cslib.Computability.PetriNets.ReductionTransitionWF
 public import Cslib.Computability.PetriNets.RemovePlace
+public import Cslib.Computability.PetriNets.Rename
 public import Cslib.Computability.PetriNets.SelfLoopTransition
 public import Cslib.Computability.PetriNets.Semantics
 public import Cslib.Computability.PetriNets.SeriesPlaceReduction
