@@ -216,6 +216,26 @@ theorem CanReach.refl (s : State) : lts.CanReach s s := by
 def generatedBy (s : State) : LTS {s' : State // lts.CanReach s s'} Label where
   Tr := fun s1 μ s2 => lts.CanReach s s1 ∧ lts.CanReach s s2 ∧ lts.Tr s1 μ s2
 
+/-- Multistep transitions of the generated LTS coincide with those of the original LTS. -/
+theorem generatedBy_mTr_iff {s₀ : State} {s s' : {x // lts.CanReach s₀ x}} {ts : List Label} :
+    (lts.generatedBy s₀).MTr s ts s' ↔ lts.MTr s.1 ts s'.1 := by
+  constructor
+  · intro h
+    induction h with
+    | refl => exact .refl
+    | stepL htr _ ih => exact .stepL htr.2.2 ih
+  · obtain ⟨x, hx⟩ := s
+    obtain ⟨y, hy⟩ := s'
+    simp only
+    intro h
+    induction h with
+    | refl => exact .refl
+    | @stepL x' μ y' μs z htr hrest ih =>
+      have hy' : lts.CanReach s₀ y' := by
+        obtain ⟨ts₀, h₀⟩ := hx
+        exact ⟨ts₀ ++ [μ], h₀.stepR lts htr⟩
+      exact .stepL (s2 := ⟨y', hy'⟩) ⟨hx, hy', htr⟩ (ih hy' hy)
+
 end MultiStep
 
 section Traces

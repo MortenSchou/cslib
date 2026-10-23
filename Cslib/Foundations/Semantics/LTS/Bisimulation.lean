@@ -645,6 +645,29 @@ theorem HomWeakBisimilarity.eqv [HasTau Label] {lts : LTS State Label} :
 
 end WeakBisimulation
 
+section Deterministic
+
+/-- In deterministic LTSs, trace equivalence is a bisimulation. -/
+theorem Deterministic.isBisimulation_traceEq [lts₁.Deterministic] [lts₂.Deterministic] :
+    IsBisimulation lts₁ lts₂ (TraceEq lts₁ lts₂) := by
+  intro s₁ s₂ h μ
+  refine ⟨fun s₁' htr => ?_, fun s₂' htr => ?_⟩
+  · obtain ⟨s₂', htr₂⟩ := h.exists_tr_of_tr htr
+    exact ⟨s₂', htr₂, h.traceEq_of_tr_of_tr htr htr₂⟩
+  · obtain ⟨s₁', htr₁⟩ := h.symm.exists_tr_of_tr htr
+    exact ⟨s₁', htr₁, h.traceEq_of_tr_of_tr htr₁ htr⟩
+
+/-- In deterministic LTSs, bisimilarity coincides with trace equivalence. -/
+theorem Deterministic.bisimilarity_iff_traceEq [lts₁.Deterministic] [lts₂.Deterministic]
+    (s₁ : State₁) (s₂ : State₂) : (s₁ ~[lts₁,lts₂] s₂) ↔ (s₁ ~tr[lts₁,lts₂] s₂) := by
+  constructor
+  · rintro ⟨r, hr, hb⟩
+    exact (hb.isSimulation.traces_subset hr).antisymm (hb.inv.isSimulation.traces_subset hr)
+  · intro h
+    exact ⟨TraceEq lts₁ lts₂, h, Deterministic.isBisimulation_traceEq⟩
+
+end Deterministic
+
 section Reindex
 
 /-! ## Reindex an LTS by an equivalence between two state types -/
