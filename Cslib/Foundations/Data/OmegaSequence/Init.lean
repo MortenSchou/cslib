@@ -384,6 +384,16 @@ lemma append_take : x ++ (a.take n) = (x ++ω a).take (x.length + n) := by
 lemma take_get (h : m < (a.take n).length) : (a.take n)[m] = a m := by
   nth_rw 2 [← append_take_drop n a]; rw [get_append_left]
 
+/-- A letter is among the first `n` letters of an ω-sequence iff it occurs at a position below
+`n`. -/
+theorem mem_take_iff {n : ℕ} {a : ωSequence α} {u : α} : u ∈ a.take n ↔ ∃ k < n, a k = u := by
+  rw [List.mem_iff_getElem]
+  constructor
+  · rintro ⟨k, hk, rfl⟩
+    exact ⟨k, by simpa using hk, by simp⟩
+  · rintro ⟨k, hk, rfl⟩
+    exact ⟨k, by simpa using hk, by simp⟩
+
 theorem take_append_of_le_length (h : n ≤ x.length) :
     (x ++ω a).take n = x.take n := by
   apply List.ext_getElem (by simp [h])

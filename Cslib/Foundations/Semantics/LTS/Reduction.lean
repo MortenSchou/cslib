@@ -34,7 +34,8 @@ every enabled member of a stubborn set have a unique successor (`IsStubborn.eq_o
   first.
 
 Only the preservation of terminal states is proved here. There is no cycle proviso and no
-visibility condition.
+visibility condition; for these, and the preservation of safety properties, see
+`Cslib.Foundations.Semantics.LTS.AmpleSets`.
 
 ## References
 
