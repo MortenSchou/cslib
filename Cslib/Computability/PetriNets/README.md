@@ -28,6 +28,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Elab` | the `net%` elaborator, which lets the notation accept other kinds of nets |
 | `Basic` | nets, markings, enabling, firing; token counts; notation |
 | `Semantics` | marking graph, reachability, boundedness, safeness, liveness, conservative nets |
+| `Independence` | commuting transitions (an instance of the generic [`LTS.CommutesWith`](../../Foundations/Semantics/LTS/Commutation.lean)), conflicts, and the diamond property of non-conflicting transitions |
+| `StubbornSets` | Valmari-style stubborn sets, a structural criterion for them, and deadlock preservation of the reduced marking graph; an instance of the generic [`LTS.reduced`](../../Foundations/Semantics/LTS/Reduction.lean) theory |
 
 ## Plans and notes
 
