@@ -131,6 +131,8 @@ public import Cslib.Computability.PetriNets.ExecutableCoverability
 public import Cslib.Computability.PetriNets.ExecutableForward
 public import Cslib.Computability.PetriNets.ExecutableLanguage
 public import Cslib.Computability.PetriNets.ExecutableReachability
+public import Cslib.Computability.PetriNets.ExecutableReducedDecisions
+public import Cslib.Computability.PetriNets.ExecutableReduction
 public import Cslib.Computability.PetriNets.ExecutableSoundness
 public import Cslib.Computability.PetriNets.ExecutableSoundnessNotions
 public import Cslib.Computability.PetriNets.ExecutableStructure

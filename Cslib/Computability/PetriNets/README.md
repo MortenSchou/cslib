@@ -68,19 +68,22 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `SelfLoopTransition` | elimination of self-loop transitions (Murata ESLT): a transition with equal preset and postset can be deleted; the reachable markings, boundedness, safeness and the weak traces (weak bisimilarity, the deleted transition being invisible) are preserved; deadlocks and liveness are preserved under side conditions (the deleted transition is never the only enabled one; it is live whenever the reduced net is), which hold for a live net |
 | `ReductionTransitionWF` | deleting one of two parallel transitions preserves and reflects the structure of a workflow net and its soundness, for the same source and sink |
 | `ReducesTo` | certificates of reduction: `ReducesTo N M₀ N' M₀'` is a chain of reductions (redundant, self-loop, parallel and isolated places, parallel and self-loop transitions, fusion of series transitions and places) between nets whose places and transitions change along the chain; boundedness, deadlocks and liveness transfer, `k`-boundedness transfers to the reduced net, `reindex` renames places and transitions, and `ReducesWF` transfers workflow structure and soundness through series fusions and the deletion of parallel transitions |
+| `ExecutableReduction` | the reductions as operations on executable nets (`removePlace`, `removeTransition`, `fuseDelete`, `dropMarking`, `collapseMarking`) with bridges to the weighted nets; renaming of places and/or transitions (`rename`, `renamePlaces`, `renameTransitions`); decidable side conditions (`IsDrain`, `IsSeries`, `IsSeriesPlace`, `ParallelTransitions`, `ParallelPlaces`, `IsIsolated`, `IsSelfLoopTransition`); certificates for executable nets with one lemma per rule (`fuseDrain`, `selfLoopTransition_of_twin`, …) |
+| `ExecutableReducedDecisions` | decide boundedness, liveness, reachable deadlocks and soundness of a net by deciding them for a smaller net, given a hand-built certificate |
 | `Rename` | renaming the places and transitions of a net along bijections (`PetriNet.rename`, `Marking.rename`): reachability, boundedness, deadlocks, liveness, workflow structure and soundness are preserved and reflected |
 
 ## Plans and notes
 
-- Certified reductions: a certificate (`PetriNet.ReducesTo`, `PetriNet.ReducesWF`) chains
-  reductions rule by rule, with the side conditions of each rule stated for the nets. Place
-  reductions only shrink the net: they do not change the set of reachable markings, so by
-  themselves they do not make `decide` cheaper. They can still enable series fusions: deleting the
-  self-loop lock place of a ring of transitions is what makes its transitions series-reducible.
-  Soundness is transferred through series fusions and the deletion of parallel transitions
-  (`ReductionTransitionWF`); it does not survive the deletion of a redundant place, and the
-  elimination of self-loop transitions is not part of `ReducesWF` (the deleted transition can be
-  the only way from one place of its preset to another).
+- Certified reductions: a certificate (`ExecPetriNet.ReducesTo`, `ExecPetriNet.ReducesWF`) can be
+  built by hand, rule by rule, with the side conditions of each rule checked by `decide`
+  (`ExecutableReducedDecisions`). Place reductions only shrink the net: they do not change the set
+  of reachable markings, so by themselves they do not make `decide` cheaper. They can still enable
+  series fusions, which remove markings: deleting the self-loop lock place of a ring of transitions
+  is what makes its transitions series-reducible. Soundness is transferred through series fusions
+  and the deletion of parallel transitions (`ReductionTransitionWF`); it does not survive the
+  deletion of a redundant place, and the elimination of self-loop transitions is not part of
+  `ReducesWF` (the deleted transition can be the only way from one place of its preset to
+  another).
 
 - Not yet formalised: reachability for unbounded nets, the Karp–Miller tree, coloured and
   inhibitor-arc nets, a decision procedure for generalized soundness (the notion is defined, and
