@@ -34,7 +34,8 @@ its twin, are equal, hence bisimilar.
   `PetriNet.ParallelTransitions.dead_removeTransition_iff`: liveness, boundedness, safeness and
   deadlocks are preserved.
 
-Fusion of series transitions is in `Cslib.Computability.PetriNets.SeriesReduction`.
+Fusion of series transitions is in `Cslib.Computability.PetriNets.SeriesReduction`, and
+elimination of self-loop transitions is in `Cslib.Computability.PetriNets.SelfLoopTransition`.
 
 ## References
 

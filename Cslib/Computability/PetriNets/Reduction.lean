@@ -49,7 +49,8 @@ bounded exactly when the net is, provided the deleted place is bounded too (whic
 Fusion of parallel transitions is in `Cslib.Computability.PetriNets.ReductionTransition`, and
 fusion of series transitions and of series places is in
 `Cslib.Computability.PetriNets.SeriesReduction` and
-`Cslib.Computability.PetriNets.SeriesPlaceReduction`.
+`Cslib.Computability.PetriNets.SeriesPlaceReduction`. Elimination of self-loop *transitions* is
+in `Cslib.Computability.PetriNets.SelfLoopTransition`.
 
 ## References
 
