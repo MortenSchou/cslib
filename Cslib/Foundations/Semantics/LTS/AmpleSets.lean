@@ -53,8 +53,14 @@ conditions, in a form that is checked by a state predicate rather than by a temp
 ## What is and is not covered
 
 This file treats *finite* executions only, which gives the safety fragment: reachability and
-invariants of properties that invisible labels cannot change. Infinite executions are not
-treated here.
+invariants of properties that invisible labels cannot change. Infinite executions and the
+preservation of LTL without next-time are treated in
+`Cslib.Foundations.Semantics.LTS.AmpleOmega` (infinite executions up to stuttering equivalence,
+with the stepwise variant `IsAmpleStep` of `C0`–`C2`, which for a deterministic LTS is `IsAmple`,
+in `Cslib.Foundations.Semantics.LTS.AmpleStep`),
+`Cslib.Foundations.Semantics.LTS.AmplePaths` (maximal paths, which may end in a terminal state)
+and `Cslib.Logics.Temporal.LTL.AmpleSets` (the LTL statement). The cycle proviso `C3` used there is
+the one of this file.
 
 ## References
 

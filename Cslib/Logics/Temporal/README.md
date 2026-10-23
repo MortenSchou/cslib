@@ -15,7 +15,9 @@ Temporal logics specify the behaviour of transition systems over time.
 - [LTL](LTL): Linear Temporal Logic. Formulas and their ω-languages (`Basic`), safety and liveness
   (`SafetyLiveness`), and evaluation on the maximal paths of a model, with CTL as path quantifiers
   over LTL (`Model`).
-  Formulas without next-time cannot distinguish stuttering equivalent sequences (`Stuttering`).
+  Formulas without next-time cannot distinguish stuttering equivalent sequences (`Stuttering`),
+  and so are preserved by partial-order reduction with ample sets, on finite and infinite maximal
+  paths (`AmpleSets`).
 
 ## Notation
 
