@@ -47,6 +47,25 @@ theorem Marking.weight_apply (w : Place → ℕ) (M : Marking Place) :
     Marking.weight w M = M.sum fun p n => w p * n := by
   simp [Marking.weight, Finsupp.liftAddHom_apply]
 
+/-- Weight is monotone: if `A ≤ B` on all places with nonzero weight, then `A` weighs less. -/
+theorem Marking.weight_le_weight {w : Place → ℕ} {A B : Marking Place}
+    (h : ∀ q, w q ≠ 0 → A q ≤ B q) : Marking.weight w A ≤ Marking.weight w B := by
+  classical
+  rw [Marking.weight_apply, Marking.weight_apply,
+    Finsupp.sum_of_support_subset A (Finset.subset_union_left (s₂ := B.support)) _ (by simp),
+    Finsupp.sum_of_support_subset B (Finset.subset_union_right (s₁ := A.support)) _ (by simp)]
+  refine Finset.sum_le_sum fun q _ => ?_
+  by_cases hq : w q = 0
+  · simp [hq]
+  · exact Nat.mul_le_mul_left _ (h q hq)
+
+/-- The weighting that is `1` at `p` and `0` elsewhere counts the tokens at `p`. -/
+theorem Marking.weight_ite_eq [DecidableEq Place] (p : Place) (M : Marking Place) :
+    Marking.weight (fun q => if q = p then 1 else 0) M = M p := by
+  rw [Marking.weight_apply,
+    Finsupp.sum_of_support_subset M (Finset.subset_insert p M.support) _ (by simp)]
+  simp
+
 /-- The weight of a marking given as a multiset is the sum of the weights of its tokens. -/
 theorem Marking.weight_toFinsupp [DecidableEq Place] (w : Place → ℕ) (s : Multiset Place) :
     Marking.weight w (Multiset.toFinsupp s) = (s.map w).sum := by
