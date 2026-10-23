@@ -15,8 +15,9 @@ public import Cslib.Computability.PetriNets.ExecutableSoundness
 Given a certificate `h : N.ReducesTo M₀ N' M₀'` (or `h : N.ReducesWF i o N' i' o'` for workflow
 nets) that `N'` is a reduction of `N`, a property of `N` is decided by deciding it for `N'`, using
 the decision procedures for executable nets, and transferring the answer along the iff-lemmas of
-`ExecPetriNet.ReducesTo`. The certificate is supplied by the user. The certificate is a proof, which
-`decide` never evaluates, so only the reduced net is evaluated.
+`ExecPetriNet.ReducesTo`. The certificate is supplied by the user; the search for reductions is in
+`Cslib.Computability.PetriNets.ExecutableAutoDecisions`. The certificate is a proof, which `decide`
+never evaluates, so only the reduced net is evaluated.
 
 ## Main definitions
 

@@ -71,19 +71,48 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `ExecutableReduction` | the reductions as operations on executable nets (`removePlace`, `removeTransition`, `fuseDelete`, `dropMarking`, `collapseMarking`) with bridges to the weighted nets; renaming of places and/or transitions (`rename`, `renamePlaces`, `renameTransitions`); decidable side conditions (`IsDrain`, `IsSeries`, `IsSeriesPlace`, `ParallelTransitions`, `ParallelPlaces`, `IsIsolated`, `IsSelfLoopTransition`); certificates for executable nets with one lemma per rule (`fuseDrain`, `selfLoopTransition_of_twin`, …) |
 | `ExecutableReducedDecisions` | decide boundedness, liveness, reachable deadlocks and soundness of a net by deciding them for a smaller net, given a hand-built certificate |
 | `Rename` | renaming the places and transitions of a net along bijections (`PetriNet.rename`, `Marking.rename`): reachability, boundedness, deadlocks, liveness, workflow structure and soundness are preserved and reflected |
+| `ExecutableReductionFin` | reductions of executable nets over `Fin n` places and `Fin m` transitions with the indices renumbered along the explicit bijection `skipEquiv` (`removePlaceFin`, `fuseFin`, …), and the first-instance searches `tryFin`, `tryPair` |
+| `ExecutableReductionSearch` | automatic search for reductions: one `try…` function per rule (fusion of a drained place, parallel and self-loop transitions, parallel, self-loop and isolated places) returning a `ReductionStep` with the reduced net and its certificate, `step`, and the iteration `reduce` / `reduceWF` / `reduceBounded` (written once for a `ReductionSystem`) that reach a fixed point |
+| `ExecutableAutoDecisions` | decision procedures that reduce the net automatically and then decide on the reduced net: `decideBoundedReduced` (with the extra rule of self-loop transitions), `decideLiveReduced`, `decideDeadlockFreeReduced`, `decideSoundReduced` (and combined versions), and `…Equiv` variants that take bijections with `Fin` types for nets over arbitrary types |
 
 ## Plans and notes
 
 - Certified reductions: a certificate (`ExecPetriNet.ReducesTo`, `ExecPetriNet.ReducesWF`) can be
   built by hand, rule by rule, with the side conditions of each rule checked by `decide`
-  (`ExecutableReducedDecisions`). Place reductions only shrink the net: they do not change the set
-  of reachable markings, so by themselves they do not make `decide` cheaper. They can still enable
-  series fusions, which remove markings: deleting the self-loop lock place of a ring of transitions
-  is what makes its transitions series-reducible. Soundness is transferred through series fusions
-  and the deletion of parallel transitions (`ReductionTransitionWF`); it does not survive the
-  deletion of a redundant place, and the elimination of self-loop transitions is not part of
-  `ReducesWF` (the deleted transition can be the only way from one place of its preset to
-  another).
+  (`ExecutableReducedDecisions`), or found by the automatic search `ExecPetriNet.reduce` /
+  `ExecPetriNet.reduceWF` (`ExecutableReductionSearch`, `ExecutableAutoDecisions`). Place
+  reductions only shrink the net: they do not change the set of reachable markings, so by
+  themselves they do not make `decide` cheaper. They can still enable series fusions, which remove
+  markings: deleting the self-loop lock place of a ring of transitions is what makes its transitions
+  series-reducible. Soundness is transferred through series fusions and the deletion of parallel
+  transitions (`ReductionTransitionWF`); it does not survive the deletion of a redundant place
+  (`CslibTests.RedundantPlaceSoundness`: the reduced net is sound, the net is not), and the
+  elimination of self-loop transitions is not part of `ReducesWF` (the deleted transition can be
+  the only way from one place of its preset to another), so the automatic reduction of workflow
+  nets uses fusion of drained places and parallel transitions only.
+- Representation of long chains of reductions: each deletion passes to a subtype, and nested
+  subtypes strain instance synthesis and `decide` (five nested fusions need
+  `synthInstance.maxSize 512`). The search therefore re-indexes after every step, along an explicit
+  bijection `{q : Fin n // q ≠ p} ≃ Fin (n - 1)` (`ExecutableReductionFin`), using the constructor
+  `reindex` of the certificates, so reduced nets stay over `Fin n'` and chains of a dozen fusions
+  are evaluated by `decide +kernel`; the arcs of each reduced net are stored in tables
+  (`ExecPetriNet.tabulate`), which makes the reduction of a ring of 80 places three times faster. The rules are tried in a fixed order and the result is a fixed
+  point (no rule applies), not necessarily the smallest equivalent net.
+- What is searched where. `reduce` (certificate `ReducesTo`, which preserves boundedness,
+  deadlocks and liveness): fusion of a drained place that is produced into (`ReducesTo.fuseDrain`,
+  which includes Murata's FST and FSP), parallel transitions, parallel, self-loop and isolated
+  places, and self-loop transitions that have a twin with the same preset (a decidable condition
+  that gives the deadlock and liveness side conditions of `ReducesTo.selfLoopTransition`).
+  `reduceBounded` (certificate: the equivalence of boundedness) adds every self-loop transition,
+  which preserves boundedness without a side condition; `decideBoundedReduced` uses it. `reduceWF`
+  (certificate `ReducesWF`): fusion of a drained place that is neither the source nor the sink, and
+  parallel transitions.
+  A self-loop transition without a twin can be deleted by a hand-built certificate
+  (`ExecPetriNet.ReducesTo.selfLoopTransition`, with its side conditions stated for the
+  reachable markings).
+- Not searched for: redundant (implicit) places in general, fusion of parallel transitions with
+  differing weights, self-loop transitions without a twin outside the boundedness search, and
+  unboundedness. Deleting self-loop transitions is not part of `ReducesWF`.
 
 - Not yet formalised: reachability for unbounded nets, the Karp–Miller tree, coloured and
   inhibitor-arc nets, a decision procedure for generalized soundness (the notion is defined, and
