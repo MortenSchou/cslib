@@ -201,6 +201,7 @@ public import Cslib.Foundations.Semantics.Frame.Basic
 public import Cslib.Foundations.Semantics.Frame.LTS
 public import Cslib.Foundations.Semantics.LTS.Basic
 public import Cslib.Foundations.Semantics.LTS.Bisimulation
+public import Cslib.Foundations.Semantics.LTS.Commutation
 public import Cslib.Foundations.Semantics.LTS.Divergence
 public import Cslib.Foundations.Semantics.LTS.ExampleTermination
 public import Cslib.Foundations.Semantics.LTS.Execution
@@ -209,6 +210,7 @@ public import Cslib.Foundations.Semantics.LTS.LTSCat.Basic
 public import Cslib.Foundations.Semantics.LTS.MapHom
 public import Cslib.Foundations.Semantics.LTS.Notation
 public import Cslib.Foundations.Semantics.LTS.OmegaExecution
+public import Cslib.Foundations.Semantics.LTS.Reduction
 public import Cslib.Foundations.Semantics.LTS.Relation
 public import Cslib.Foundations.Semantics.LTS.Reverse
 public import Cslib.Foundations.Semantics.LTS.SetImage
