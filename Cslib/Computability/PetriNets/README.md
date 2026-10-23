@@ -57,6 +57,9 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `ExecutableReachability` | reachability and deadlock reachability for bounded executable nets |
 | `ExecutableSoundnessNotions` | decision procedures for the notions of soundness on bounded executable nets |
 | `ExecutableSoundness` | soundness of executable nets is decidable |
+| `RemovePlace` | deleting a place and restricting markings (`removePlace`, `Marking.drop`); firings, firing sequences and reachability descend to the reduced net; isolated places |
+| `Reduction` | Murata's reduction of places: redundant (implicit) places, self-loop places, parallel places and isolated places; deleting a redundant place preserves firing sequences (bisimilarity), deadlocks and liveness, and `N` is bounded iff the reduced net and the deleted place are |
+| `ReductionTransition` | fusion of parallel transitions; preserves reachable markings, bisimilarity of the labelled marking graph, liveness, boundedness and deadlocks |
 
 ## Plans and notes
 

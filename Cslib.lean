@@ -137,6 +137,9 @@ public import Cslib.Computability.PetriNets.FreeChoice
 public import Cslib.Computability.PetriNets.Labelled
 public import Cslib.Computability.PetriNets.Monotonicity
 public import Cslib.Computability.PetriNets.PlaceInvariants
+public import Cslib.Computability.PetriNets.Reduction
+public import Cslib.Computability.PetriNets.ReductionTransition
+public import Cslib.Computability.PetriNets.RemovePlace
 public import Cslib.Computability.PetriNets.Semantics
 public import Cslib.Computability.PetriNets.Soundness
 public import Cslib.Computability.PetriNets.SoundnessNotions
