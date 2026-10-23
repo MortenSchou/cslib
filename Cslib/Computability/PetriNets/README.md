@@ -60,7 +60,11 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `CTL` | the marking graph as a CTL model; easy and `k`-soundness, liveness and deadlock-freeness as CTL formulas; CTL satisfaction is decidable for bounded executable nets |
 | `LTL` | LTL on the maximal firing sequences of a net; LTL model checking is decidable for bounded executable nets |
 | `Independence` | commuting transitions (an instance of the generic [`LTS.CommutesWith`](../../Foundations/Semantics/LTS/Commutation.lean)), conflicts, and the diamond property of non-conflicting transitions |
-| `StubbornSets` | Valmari-style stubborn sets, a structural criterion for them, and deadlock preservation of the reduced marking graph; an instance of the generic [`LTS.reduced`](../../Foundations/Semantics/LTS/Reduction.lean) theory |
+| `StubbornSets` | Valmari-style stubborn sets, a structural criterion for them, and deadlock preservation of the reduced marking graph; an instance of the generic [`LTS.reduced`](../../Foundations/Semantics/LTS/Reduction.lean) theory, extended to safety and LTL without next-time in `ExecutableAmple` and `ExecutableAmpleLTL` |
+| `ExecutableStubborn` | a computable stubborn selector for executable nets (cheapest enabled seed, least missing place, finset fixpoint), proved closed, and the computed reduced reachable markings |
+| `ExecutableAmple` | stubborn sets as ample sets for safety: with visible transitions and a bounded level function as cycle proviso, reachability and invariants of predicates insensitive to invisible transitions are preserved by the reduced graph (finite firing sequences); instances of the generic [`LTS.IsAmple`](../../Foundations/Semantics/LTS/AmpleSets.lean) theory |
+| `ExecutableAmpleLTL` | the same selector preserves LTL without next-time on all and on some maximal firing sequence (finite and infinite), for the observed atoms that invisible transitions do not change; an instance of the generic [`LTL.allPaths_reduced_iff`](../../Logics/Temporal/LTL/AmpleSets.lean) |
+| `ExecutableAmplePlaces` | the same for LTL over the atoms `k ≤ M p` of the tokens of places, with the transitions that change the observed places as visible transitions; a maximal path of the reduced graph stays in a closed level of the computed reduced reachable markings |
 
 ## Plans and notes
 

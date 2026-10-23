@@ -126,6 +126,9 @@ public import Cslib.Computability.PetriNets.CoverabilityBasis
 public import Cslib.Computability.PetriNets.Elab
 public import Cslib.Computability.PetriNets.Equivalence
 public import Cslib.Computability.PetriNets.Executable
+public import Cslib.Computability.PetriNets.ExecutableAmple
+public import Cslib.Computability.PetriNets.ExecutableAmpleLTL
+public import Cslib.Computability.PetriNets.ExecutableAmplePlaces
 public import Cslib.Computability.PetriNets.ExecutableBoundedness
 public import Cslib.Computability.PetriNets.ExecutableCoverability
 public import Cslib.Computability.PetriNets.ExecutableForward
@@ -134,6 +137,7 @@ public import Cslib.Computability.PetriNets.ExecutableReachability
 public import Cslib.Computability.PetriNets.ExecutableSoundness
 public import Cslib.Computability.PetriNets.ExecutableSoundnessNotions
 public import Cslib.Computability.PetriNets.ExecutableStructure
+public import Cslib.Computability.PetriNets.ExecutableStubborn
 public import Cslib.Computability.PetriNets.FreeChoice
 public import Cslib.Computability.PetriNets.Independence
 public import Cslib.Computability.PetriNets.LTL
