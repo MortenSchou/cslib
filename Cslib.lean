@@ -199,6 +199,7 @@ public import Cslib.Foundations.Semantics.FLTS.Prod
 public import Cslib.Foundations.Semantics.FLTS.SyncTrace
 public import Cslib.Foundations.Semantics.Frame.Basic
 public import Cslib.Foundations.Semantics.Frame.LTS
+public import Cslib.Foundations.Semantics.LTS.AmpleSets
 public import Cslib.Foundations.Semantics.LTS.Basic
 public import Cslib.Foundations.Semantics.LTS.Bisimulation
 public import Cslib.Foundations.Semantics.LTS.Commutation
