@@ -117,6 +117,7 @@ public import Cslib.Computability.Machines.Turing.MultiTape.TapeLemmas
 public import Cslib.Computability.Machines.Turing.SingleTape.Defs
 public import Cslib.Computability.Machines.Turing.SingleTape.Deterministic
 public import Cslib.Computability.Machines.Turing.SingleTape.NonDeterministic
+public import Cslib.Computability.PetriNets.Automaton
 public import Cslib.Computability.PetriNets.BackwardCoverability
 public import Cslib.Computability.PetriNets.Basic
 public import Cslib.Computability.PetriNets.Coverability
@@ -124,6 +125,7 @@ public import Cslib.Computability.PetriNets.CoverabilityBasis
 public import Cslib.Computability.PetriNets.Decision.Boundedness
 public import Cslib.Computability.PetriNets.Decision.Coverability
 public import Cslib.Computability.PetriNets.Decision.Structure
+public import Cslib.Computability.PetriNets.Equivalence
 public import Cslib.Computability.PetriNets.FreeChoice
 public import Cslib.Computability.PetriNets.Monotonicity
 public import Cslib.Computability.PetriNets.PlaceInvariants

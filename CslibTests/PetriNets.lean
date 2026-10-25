@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Morten Schou
 -/
 
+import Cslib.Computability.PetriNets.Automaton
 import Cslib.Computability.PetriNets.BackwardCoverability
 import Cslib.Computability.PetriNets.Basic
 import Cslib.Computability.PetriNets.Coverability
@@ -11,6 +12,7 @@ import Cslib.Computability.PetriNets.CoverabilityBasis
 import Cslib.Computability.PetriNets.Decision.Boundedness
 import Cslib.Computability.PetriNets.Decision.Coverability
 import Cslib.Computability.PetriNets.Decision.Structure
+import Cslib.Computability.PetriNets.Equivalence
 import Cslib.Computability.PetriNets.FreeChoice
 import Cslib.Computability.PetriNets.Monotonicity
 import Cslib.Computability.PetriNets.PlaceInvariants
@@ -502,5 +504,57 @@ example : step.Bounded (token false) := step_sound.bounded_net
 /-- Generalized soundness is refuted by a failure of `k`-soundness for some `k`. -/
 example (h : ¬ step.KSound false true 3) : ¬ step.GeneralizedSound false true :=
   not_generalizedSound_of_not_kSound h
+
+/-! ### Firing languages as automata -/
+
+/-- Every firing language of the (bounded) producer/consumer net is regular. -/
+example (F : Set (Marking Pl)) : (prodCons.firingLanguage M₀ F).IsRegular :=
+  isRegular_firingLanguage (prodCons_conservative.kBounded _).bounded F
+
+/-- The sequence `produce, produce, consume` leads from `M₀` to `{buffer, consuming}`. -/
+example : [produce, produce, consume] ∈ prodCons.firingLanguage M₀ {{buffer, consuming}} := by
+  have h₁ : M₀ [produce⟩[prodCons] {producing, buffer} := by decide
+  have h₂ : ({producing, buffer} : Marking Pl) [produce⟩[prodCons] {buffer, buffer} := by decide
+  have h₃ : ({buffer, buffer} : Marking Pl) [consume⟩[prodCons] {buffer, consuming} := by decide
+  exact ⟨_, rfl, .stepL h₁ (.stepL h₂ (.single _ h₃))⟩
+
+/-- The sequence `[consume]` is not even firable from `M₀`. -/
+example : [consume] ∉ prodCons.firingLanguage M₀ {{buffer, consuming}} := by
+  rintro ⟨M, -, h⟩
+  cases h with
+  | stepL htr _ => exact absurd (fires_iff.1 htr).1 (by decide)
+
+/-! ### Behavioural equivalence -/
+
+/-- A marking with no `producing` and no `buffer` token is dead. -/
+theorem prodCons_dead (M : Marking Pl) (h₁ : producing ∉ M) (h₂ : buffer ∉ M) :
+    prodCons.Dead M := by
+  rw [dead_iff]
+  intro t h
+  cases t
+  · exact h₁ (Multiset.mem_of_le h (Multiset.mem_singleton_self _))
+  · exact h₂ (Multiset.mem_of_le h (Multiset.mem_singleton_self _))
+
+theorem dead_one : prodCons.Dead {consuming} :=
+  prodCons_dead _ (by simp) (by simp)
+
+theorem dead_two : prodCons.Dead {consuming, consuming} :=
+  prodCons_dead _ (by simp) (by simp)
+
+open LTS in
+/-- The markings with one and with two `consuming` tokens are different but bisimilar. -/
+example : ∃ M₁ M₂ : Marking Pl, M₁ ≠ M₂ ∧ (M₁ ~[prodCons.lts] M₂) :=
+  ⟨{consuming}, {consuming, consuming}, by decide, bisimilar_of_dead _ dead_one dead_two⟩
+
+/-- Bisimilar markings have the same traces. -/
+example : prodCons.lts.traces {consuming} = prodCons.lts.traces {consuming, consuming} :=
+  (bisimilar_iff_traces_eq _ _ _).1 (bisimilar_of_dead _ dead_one dead_two)
+
+open Logic.Modal in
+/-- Bisimilar dead markings satisfy the same Hennessy-Milner formulas. -/
+example : TheoryEq (HML.Model.mk prodCons.lts (fun _ (_ : Unit) => True)).toModal
+    {consuming} {consuming, consuming} :=
+  (theoryEq_iff_bisimilar prodCons _ (fun _ _ => Iff.rfl) _ _).2
+    (bisimilar_of_dead _ dead_one dead_two)
 
 end CslibTests

@@ -48,6 +48,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Decision/Structure` | decidable structural properties (conservative, ordinary, free-choice, siphon-trap) |
 | `SoundnessNotions` | workflow nets (`IsWFNet`) and the weak, `k`-, relaxed, lazy and easy notions of soundness |
 | `Soundness` | soundness of workflow nets ⟺ short circuit live and bounded |
+| `Automaton` | firing languages of bounded nets are regular |
+| `Equivalence` | bisimilarity and HML equivalence of markings |
 
 ## Plans and notes
 
