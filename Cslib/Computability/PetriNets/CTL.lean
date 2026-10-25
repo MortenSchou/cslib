@@ -34,6 +34,7 @@ graph, in which CTL satisfaction is decided by the labelling algorithm.
 - `PetriNet.satisfies_iff_finiteModel`: satisfaction in the marking graph is satisfaction in
   the finite model, when the latter is closed under transitions.
 - `PetriNet.decidableSatisfies`: CTL satisfaction is decidable for bounded nets.
+- `PetriNet.decidableLive`: liveness is decidable for bounded nets, as `AG EF` formulas.
 -/
 
 @[expose] public section
@@ -184,6 +185,16 @@ instance (M₀ : Marking Place) [h : Fact (N.Bounded M₀)]
     (φ : Formula (Atom Place Transition)) :
     Decidable (⇓CTL[N.model,M₀ ⊨ φ]) :=
   decidableSatisfies M₀ h.out φ
+
+/-- Liveness is decidable for bounded nets: every transition is `AG EF` enabled. -/
+def decidableLive (M₀ : Marking Place) (hb : N.Bounded M₀) : Decidable (N.Live M₀) :=
+  have : ∀ t, Decidable (N.LiveAt M₀ t) := fun _ =>
+    @decidable_of_iff _ _ liveAt_iff.symm (decidableSatisfies M₀ hb _)
+  inferInstanceAs (Decidable (∀ t, N.LiveAt M₀ t))
+
+/-- Liveness is decided by `decide` once boundedness is available as a `Fact`. -/
+instance (M₀ : Marking Place) [h : Fact (N.Bounded M₀)] : Decidable (N.Live M₀) :=
+  decidableLive M₀ h.out
 
 end Finite
 

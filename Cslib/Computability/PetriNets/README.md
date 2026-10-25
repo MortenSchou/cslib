@@ -57,7 +57,7 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Decision/Reachability` | reachability and deadlock reachability for bounded nets |
 | `Decision/SoundnessNotions` | decision procedures for the notions of soundness on bounded nets |
 | `Decision/Soundness` | soundness of nets is decidable |
-| `CTL` | the marking graph as a CTL model; easy and `k`-soundness, liveness and deadlock-freeness as CTL formulas; CTL satisfaction is decidable for bounded nets |
+| `CTL` | the marking graph as a CTL model; easy and `k`-soundness, liveness and deadlock-freeness as CTL formulas; CTL satisfaction, hence liveness (`decidableLive`), is decidable for bounded nets |
 | `LTL` | LTL on the maximal firing sequences of a net; LTL model checking is decidable for bounded nets |
 | `SeriesReduction` | fusion of series transitions (Murata FST), under side conditions: the reduced net is weakly bisimilar to the original, and preserves reachability, deadlock-freedom, liveness, boundedness and soundness of workflow nets; deleting the isolated place gives a workflow net again (`fuseDelete`), so reducing before deciding soundness gives an equivalent question. The reduction (`fuse`, `fuseDelete`, `collapse`) is computable and its side conditions are decidable |
 | `SeriesPlaceReduction` | fusion of series places (Murata FSP), under side conditions: the same preservation results (liveness needs a producer of the first place), with the merged place holding the tokens of both places |
@@ -67,15 +67,17 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `SelfLoopTransition` | elimination of self-loop transitions (Murata ESLT): a transition with equal preset and postset can be deleted; the reachable markings, boundedness, safeness and the weak traces (weak bisimilarity, the deleted transition being invisible) are preserved; deadlocks and liveness are preserved under side conditions (the deleted transition is never the only enabled one; it is live whenever the reduced net is), which hold for a live net |
 | `ReductionTransitionWF` | deleting one of two parallel transitions preserves and reflects the structure of a workflow net and its soundness, for the same source and sink |
 | `ReducesTo` | certificates of reduction: `ReducesTo N M₀ N' M₀'` is a chain of reductions (redundant, self-loop, parallel and isolated places, parallel and self-loop transitions, fusion of series transitions and places) between nets whose places and transitions change along the chain; boundedness, deadlocks and liveness transfer, `k`-boundedness transfers to the reduced net, `reindex` renames places and transitions, and `ReducesWF` transfers workflow structure and soundness through series fusions and the deletion of parallel transitions |
+| `Decision/Reduced` | decide boundedness, liveness, reachable deadlocks and soundness of a net by deciding them for a smaller net, given a hand-built certificate (`ReducesTo`, `ReducesWF`) |
 | `Rename` | renaming the places and transitions of a net along bijections (`PetriNet.rename`, computable; markings are renamed by `Multiset.map`): reachability, boundedness, deadlocks, liveness, workflow structure and soundness are preserved and reflected |
 
 ## Plans and notes
 
 - Certified reductions: a certificate (`PetriNet.ReducesTo`, `PetriNet.ReducesWF`) chains
-  reductions rule by rule, with the side conditions of each rule stated for the nets. Place
-  reductions only shrink the net: they do not change the set of reachable markings, so by
-  themselves they do not make `decide` cheaper. They can still enable series fusions: deleting the
-  self-loop lock place of a ring of transitions is what makes its transitions series-reducible.
+  reductions rule by rule, with the side conditions of each rule stated for the nets and checked
+  by `decide` (`Decision/Reduced`). Place reductions only shrink the net: they do not change the
+  set of reachable markings, so by themselves they do not make `decide` cheaper. They can still
+  enable series fusions, which remove markings: deleting the self-loop lock place of a ring of
+  transitions is what makes its transitions series-reducible.
   Soundness is transferred through series fusions and the deletion of parallel transitions
   (`ReductionTransitionWF`); it does not survive the deletion of a redundant place, and the
   elimination of self-loop transitions is not part of `ReducesWF` (the deleted transition can be

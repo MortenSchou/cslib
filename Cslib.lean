@@ -127,6 +127,7 @@ public import Cslib.Computability.PetriNets.Decision.Boundedness
 public import Cslib.Computability.PetriNets.Decision.Coverability
 public import Cslib.Computability.PetriNets.Decision.Language
 public import Cslib.Computability.PetriNets.Decision.Reachability
+public import Cslib.Computability.PetriNets.Decision.Reduced
 public import Cslib.Computability.PetriNets.Decision.Soundness
 public import Cslib.Computability.PetriNets.Decision.SoundnessNotions
 public import Cslib.Computability.PetriNets.Decision.Structure

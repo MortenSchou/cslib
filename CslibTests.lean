@@ -38,6 +38,7 @@ import CslibTests.PRG
 import CslibTests.PetriNets
 import CslibTests.Query
 import CslibTests.QueryComplexity
+import CslibTests.ReducedDecisions
 import CslibTests.Reduction
 import CslibTests.StatefulProcesses
 import CslibTests.Synthesis
