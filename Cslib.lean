@@ -123,6 +123,9 @@ public import Cslib.Computability.PetriNets.Basic
 public import Cslib.Computability.PetriNets.CTL
 public import Cslib.Computability.PetriNets.Coverability
 public import Cslib.Computability.PetriNets.CoverabilityBasis
+public import Cslib.Computability.PetriNets.Decision.Ample
+public import Cslib.Computability.PetriNets.Decision.AmpleLTL
+public import Cslib.Computability.PetriNets.Decision.AmplePlaces
 public import Cslib.Computability.PetriNets.Decision.Boundedness
 public import Cslib.Computability.PetriNets.Decision.Coverability
 public import Cslib.Computability.PetriNets.Decision.Language
@@ -130,6 +133,7 @@ public import Cslib.Computability.PetriNets.Decision.Reachability
 public import Cslib.Computability.PetriNets.Decision.Soundness
 public import Cslib.Computability.PetriNets.Decision.SoundnessNotions
 public import Cslib.Computability.PetriNets.Decision.Structure
+public import Cslib.Computability.PetriNets.Decision.Stubborn
 public import Cslib.Computability.PetriNets.Equivalence
 public import Cslib.Computability.PetriNets.FreeChoice
 public import Cslib.Computability.PetriNets.Independence

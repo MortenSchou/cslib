@@ -1,4 +1,5 @@
 import CslibTests.AmpleLTL
+import CslibTests.AmplePlaces
 import CslibTests.AmpleSets
 import CslibTests.Bisimulation
 import CslibTests.BooleanCircuits

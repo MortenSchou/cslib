@@ -36,7 +36,11 @@ sequences. Exploring only a stubborn set at each marking preserves the reachable
 
 The structural notions count tokens, so they assume decidable equality of places.
 
-This file proves deadlock preservation only.
+This file proves deadlock preservation. The reduction also preserves safety properties and LTL
+without next-time, if the selector takes all transitions when a visible transition is enabled in the
+stubborn set and satisfies a cycle proviso: this is the generic theory of
+`Cslib.Foundations.Semantics.LTS.AmpleSets`, instantiated to computed stubborn sets in
+`Cslib.Computability.PetriNets.Decision.Ample`.
 
 ## References
 
