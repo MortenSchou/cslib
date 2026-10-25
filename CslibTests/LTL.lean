@@ -5,7 +5,9 @@ Authors: Morten Schou
 -/
 
 import CslibTests.CTL
+import Cslib.Logics.Temporal.LTL.Bisimulation
 import Cslib.Logics.Temporal.LTL.Model
+import Cslib.Logics.Temporal.LTL.ModelChecking
 import Cslib.Logics.Temporal.LTL.SafetyLiveness
 
 namespace CslibTests.LTL
@@ -81,5 +83,55 @@ example : ⇓LTL[lasso.lift,0 ⊨∃ F (.atom stop)] :=
 example (m : CTL.Model (Fin 4) Bool) (s : Fin 4) (φ : Formula Bool) :
     ⇓LTL[m,s ⊨∀ φ] ↔ ¬ ⇓LTL[m,s ⊨∃ ¬φ] :=
   allPaths_iff_not_somePath
+
+/-! ## Model checking the lasso
+
+Paths from state `0` go around the lp `1 ↔ 2` forever, or leave it for the deadlock `3`, where
+they stay forever. -/
+
+local notation "lp" => (Formula.atom true : Formula Bool)
+local notation "sp" => (Formula.atom false : Formula Bool)
+
+/-- The deadlock is reachable on some path but not on all of them. -/
+example : ⇓LTL[lasso,0 ⊨∃ F sp] := by decide
+
+example : ¬ ⇓LTL[lasso,0 ⊨∀ F sp] := by decide
+
+/-- Every path eventually stays in the lp forever, or reaches the deadlock. This mixes `F` and `G`
+in a way that CTL cannot express. -/
+example : ⇓LTL[lasso,0 ⊨∀ (F G lp) ∨ (F sp)] := by decide
+
+/-- Some path visits the lp infinitely often, but not all do. -/
+example : ⇓LTL[lasso,0 ⊨∃ G F lp] := by decide
+
+example : ¬ ⇓LTL[lasso,0 ⊨∀ G F lp] := by decide
+
+/-- Staying in the lp forever and reaching the deadlock exclude each other. -/
+example : ¬ ⇓LTL[lasso,0 ⊨∃ (G lp) ∧ (F sp)] := by decide
+
+/-- `X` looks one step ahead, and the deadlock repeats itself. -/
+example : ⇓LTL[lasso,0 ⊨∀ X lp] := by decide
+
+example : ¬ ⇓LTL[lasso,0 ⊨∀ X X lp] := by decide
+
+example : ⇓LTL[lasso,3 ⊨∀ G sp] := by decide
+
+/-- `U`: the lp holds until the deadlock, on the paths that reach it. -/
+example : ⇓LTL[lasso,1 ⊨∃ lp U sp] := by decide
+
+example : ¬ ⇓LTL[lasso,1 ⊨∀ lp U sp] := by decide
+
+/-! ## Model checking mutual exclusion -/
+
+/-- Safety: both processes are never critical at once. -/
+example : ⇓LTL[mutex true,(0, 0) ⊨∀ G (¬(.atom 0 ∧ .atom 1))] := by decide
+
+example : ¬ ⇓LTL[mutex false,(0, 0) ⊨∀ G (¬(.atom 0 ∧ .atom 1))] := by decide
+
+/-- Without fairness, a process may never get to run: it is not guaranteed to be critical. -/
+example : ¬ ⇓LTL[mutex true,(0, 0) ⊨∀ F (.atom 0 : Formula (Fin 2))] := by decide
+
+/-- But the first process is critical infinitely often on some path. -/
+example : ⇓LTL[mutex true,(0, 0) ⊨∃ G F (.atom 0 : Formula (Fin 2))] := by decide
 
 end CslibTests.LTL

@@ -9,12 +9,16 @@ Temporal logics specify the behaviour of transition systems over time.
 
 - [CTL](CTL): Computation Tree Logic. Formulas (`Basic`), a satisfaction relation over maximal
   paths (`Semantics`), and the fixpoint semantics with its agreement with the path semantics
-  (`Denotation`), the embedding of basic modal logic (`Modal`), and `EF`/`AG` as reachability
-  (`Reachability`).
+  (`Denotation`), the embedding of basic modal logic (`Modal`), a decision procedure for finite
+  models (`ModelChecking`), invariance under the bisimulations of `LTS`s (`Bisimulation`), and
+  `EF`/`AG` as reachability (`Reachability`).
 
 - [LTL](LTL): Linear Temporal Logic. Formulas and their ω-languages (`Basic`), safety and liveness
   (`SafetyLiveness`), and evaluation on the maximal paths of a model, with CTL as path quantifiers
-  over LTL (`Model`).
+  over LTL (`Model`). Model checking on finite models is decidable (`ModelChecking`), by the tableau
+  construction: a path satisfying a formula is a fair path in a product graph, and fair paths in
+  finite graphs are reachable cycles (`FairPath`). LTL is also invariant under the bisimulations of
+  `LTS`s (`Bisimulation`).
   Formulas without next-time cannot distinguish stuttering equivalent sequences (`Stuttering`),
   and so are preserved by partial-order reduction with ample sets, on finite and infinite maximal
   paths (`AmpleSets`).
