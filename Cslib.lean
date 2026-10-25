@@ -117,6 +117,14 @@ public import Cslib.Computability.Machines.Turing.MultiTape.TapeLemmas
 public import Cslib.Computability.Machines.Turing.SingleTape.Defs
 public import Cslib.Computability.Machines.Turing.SingleTape.Deterministic
 public import Cslib.Computability.Machines.Turing.SingleTape.NonDeterministic
+public import Cslib.Computability.PetriNets.BackwardCoverability
+public import Cslib.Computability.PetriNets.Basic
+public import Cslib.Computability.PetriNets.Coverability
+public import Cslib.Computability.PetriNets.CoverabilityBasis
+public import Cslib.Computability.PetriNets.Monotonicity
+public import Cslib.Computability.PetriNets.Semantics
+public import Cslib.Computability.PetriNets.Unboundedness
+public import Cslib.Computability.PetriNets.WSTS
 public import Cslib.Computability.QueryComplexity.Defs
 public import Cslib.Computability.QueryComplexity.Measures
 public import Cslib.Computability.URM.Basic
@@ -125,6 +133,13 @@ public import Cslib.Computability.URM.Defs
 public import Cslib.Computability.URM.Execution
 public import Cslib.Computability.URM.StandardForm
 public import Cslib.Computability.URM.StraightLine
+public import Cslib.Computability.WSTS.Basic
+public import Cslib.Computability.WSTS.Coverability
+public import Cslib.Computability.WSTS.Decidability
+public import Cslib.Computability.WSTS.Examples.VASS
+public import Cslib.Computability.WSTS.Examples.VASSCoverability
+public import Cslib.Computability.WSTS.InfiniteRuns
+public import Cslib.Computability.WSTS.Unboundedness
 public import Cslib.Crypto.Negligible
 public import Cslib.Crypto.Primitives.PRG.Asymptotic
 public import Cslib.Crypto.Primitives.PRG.Basic
@@ -170,6 +185,7 @@ public import Cslib.Foundations.Data.PFunctor.Free
 public import Cslib.Foundations.Data.PFunctor.Free.Fold
 public import Cslib.Foundations.Data.PFunctor.Free.W
 public import Cslib.Foundations.Data.Polynomial.Monotone
+public import Cslib.Foundations.Data.Search
 public import Cslib.Foundations.Data.Set.Saturation
 public import Cslib.Foundations.Data.StackTape
 public import Cslib.Foundations.Lint.Basic
