@@ -46,6 +46,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `FreeChoice` | free-choice nets and Commoner's theorem: an ordinary free-choice net is live iff every siphon contains a marked trap |
 | [`Ranking`](../../Foundations/Data/Set/Ranking.lean) | `exists_rank`: ranking a finite set by successive exits, used for the necessity half of Commoner's theorem |
 | `Decision/Structure` | decidable structural properties (conservative, ordinary, free-choice, siphon-trap) |
+| `SoundnessNotions` | workflow nets (`IsWFNet`) and the weak, `k`-, relaxed, lazy and easy notions of soundness |
+| `Soundness` | soundness of workflow nets ⟺ short circuit live and bounded |
 
 ## Plans and notes
 

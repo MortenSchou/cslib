@@ -15,6 +15,8 @@ import Cslib.Computability.PetriNets.FreeChoice
 import Cslib.Computability.PetriNets.Monotonicity
 import Cslib.Computability.PetriNets.PlaceInvariants
 import Cslib.Computability.PetriNets.Semantics
+import Cslib.Computability.PetriNets.Soundness
+import Cslib.Computability.PetriNets.SoundnessNotions
 import Cslib.Computability.PetriNets.StateEquation
 import Cslib.Computability.PetriNets.Structure
 import Cslib.Computability.PetriNets.Unboundedness
@@ -418,5 +420,87 @@ def confusion : PetriNet Pl Tr where
   post | produce => {buffer} | consume => {consuming}
 
 example : ¬ confusion.IsFreeChoice := by decide
+
+/-! ### Soundness of workflow nets
+
+The smallest workflow: a single transition moves the token from the source `false` to the sink
+`true`. -/
+
+/-- A workflow net with one transition from the source `false` to the sink `true`. -/
+def step : PetriNet Bool Unit where
+  pre _ := {false}
+  post _ := {true}
+
+theorem step_fires : (token false) [()⟩[step] token true :=
+  ⟨0, rfl, rfl⟩
+
+/-- From the source, only the markings with a single token in the source or in the sink are
+reachable. -/
+theorem step_reachable (M : Marking Bool) (h : token false ⇝[step] M) :
+    M = token false ∨ M = token true := by
+  refine h.invariant (P := fun K => K = token false ∨ K = token true) ?_ (Or.inl rfl)
+  rintro K u K' ⟨R, rfl, rfl⟩ hK
+  rcases hK with hK | hK
+  · have hR : R = 0 := add_eq_left.1 hK
+    subst hR
+    simp [token, step]
+  · have := congrArg (false ∈ ·) hK
+    simp [token, step] at this
+
+theorem step_sound : step.Sound false true where
+  completion M h := by
+    rcases step_reachable M h with rfl | rfl
+    · exact step_fires.reachable
+    · exact Reachable.refl _ _
+  proper M h hle := by
+    rcases step_reachable M h with rfl | rfl
+    · exact absurd hle (by decide)
+    · rfl
+  noDead _ := ⟨token false, Reachable.refl _ _, le_rfl⟩
+
+/-- The net is a workflow net: every node lies on a path from the source to the sink. -/
+theorem step_wf : step.IsWFNet false true where
+  no_input_source _ := by simp [step]
+  no_output_sink _ := by simp [step]
+  reach_from_source n := by
+    have a₁ : step.Arc (.inl false) (.inr ()) := by simp [Arc, step]
+    have a₂ : step.Arc (.inr ()) (.inl true) := by simp [Arc, step]
+    rcases n with (_ | _) | _
+    · exact .refl
+    · exact .head a₁ (.single a₂)
+    · exact .single a₁
+  reach_to_sink n := by
+    have a₁ : step.Arc (.inl false) (.inr ()) := by simp [Arc, step]
+    have a₂ : step.Arc (.inr ()) (.inl true) := by simp [Arc, step]
+    rcases n with (_ | _) | _
+    · exact .head a₁ (.single a₂)
+    · exact .refl
+    · exact .single a₂
+
+/-- Soundness implies the weaker notions. -/
+example : step.WeakSound false true := step_sound.weak
+
+example : step.RelaxedSound false true := step_sound.relaxed
+
+example : step.EasySound false true := step_sound.weak.easy
+
+example : step.LazySound false true := .of_weak (fun _ => by simp [step]) step_sound.weak
+
+/-- In a workflow net, soundness is weak soundness without dead transitions. -/
+example : step.Sound false true ↔ step.WeakSound false true ∧
+    ∀ t, ∃ M, token false ⇝[step] M ∧ M [t⟩[step] :=
+  step_wf.sound_iff
+
+/-- Van der Aalst's theorem: the short-circuited net is live and bounded. -/
+example : (step.shortCircuit false true).Live (token false) ∧
+    (step.shortCircuit false true).Bounded (token false) :=
+  sound_iff_live_and_bounded.1 step_sound
+
+/-- A sound net over finitely many places and transitions is bounded. -/
+example : step.Bounded (token false) := step_sound.bounded_net
+
+/-- Generalized soundness is refuted by a failure of `k`-soundness for some `k`. -/
+example (h : ¬ step.KSound false true 3) : ¬ step.GeneralizedSound false true :=
+  not_generalizedSound_of_not_kSound h
 
 end CslibTests

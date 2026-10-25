@@ -128,6 +128,8 @@ public import Cslib.Computability.PetriNets.FreeChoice
 public import Cslib.Computability.PetriNets.Monotonicity
 public import Cslib.Computability.PetriNets.PlaceInvariants
 public import Cslib.Computability.PetriNets.Semantics
+public import Cslib.Computability.PetriNets.Soundness
+public import Cslib.Computability.PetriNets.SoundnessNotions
 public import Cslib.Computability.PetriNets.StateEquation
 public import Cslib.Computability.PetriNets.Structure
 public import Cslib.Computability.PetriNets.Unboundedness
