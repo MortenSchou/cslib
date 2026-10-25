@@ -30,8 +30,11 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 |------|----------|
 | `Basic` | nets, markings, enabling, firing, the computable firing rule; notation |
 | `Semantics` | marking graph, reachability, boundedness, safeness, liveness, conservative nets |
+| `ReachabilityInstance` | encodable instances of the reachability problem (`ReachInstance`, `Primcodable`; every net with places `Fin d` is represented), the net of an instance, and list-level firing sequences (`runL`) equivalent to reachability |
+| `VASSimulation` | markings as vectors of token counts (`Marking.ofFun`), the Petri net of a vector addition system, and the lock construction simulating a Petri net by a VAS (`reachable_iff_vas_reach`) |
+| `ReachabilityLock` | the lock construction as a primitive recursive translation from instances to coded VAS (`VASCode`) |
+| `ReachabilityDecidable` | reachability is decidable: it is recursively enumerable (firing sequences) and so is non-reachability (Presburger inductive invariants of `Computability/VAS`) |
 
 ## Plans and notes
 
-- Not yet formalised: reachability for unbounded nets, the Karp–Miller tree, coloured and
-  inhibitor-arc nets.
+- Not yet formalised: the Karp–Miller tree, coloured and inhibitor-arc nets.

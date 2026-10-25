@@ -118,7 +118,11 @@ public import Cslib.Computability.Machines.Turing.SingleTape.Defs
 public import Cslib.Computability.Machines.Turing.SingleTape.Deterministic
 public import Cslib.Computability.Machines.Turing.SingleTape.NonDeterministic
 public import Cslib.Computability.PetriNets.Basic
+public import Cslib.Computability.PetriNets.ReachabilityDecidable
+public import Cslib.Computability.PetriNets.ReachabilityInstance
+public import Cslib.Computability.PetriNets.ReachabilityLock
 public import Cslib.Computability.PetriNets.Semantics
+public import Cslib.Computability.PetriNets.VASSimulation
 public import Cslib.Computability.Presburger.Computable
 public import Cslib.Computability.Presburger.Cooper
 public import Cslib.Computability.Presburger.Decide

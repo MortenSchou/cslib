@@ -5,6 +5,7 @@ Authors: Morten Schou
 -/
 
 import Cslib.Computability.PetriNets.Basic
+import Cslib.Computability.PetriNets.ReachabilityDecidable
 import Cslib.Computability.PetriNets.Semantics
 
 namespace CslibTests
@@ -109,5 +110,34 @@ example : prodCons.run {producing} [produce, consume] = some {consuming} := by d
 /-- A run of the computable rule is a firing sequence of the marking graph. -/
 example : prodCons.lts.MTr {producing} [produce, consume] {consuming} :=
   run_eq_some_iff.1 (by decide)
+
+/-! ### Reachability: instances and the lock construction -/
+
+/-- The instance with one place and one transition that moves a token from the place to itself. -/
+def loopInstance : ReachInstance := ⟨1, [([1], [1])], [1], [0]⟩
+
+/-- The instance with one place and one transition that consumes a token. -/
+def drainInstance : ReachInstance := ⟨1, [([1], [])], [1], [0]⟩
+
+example : loopInstance.runL [1] [0] = some [1] := by decide +kernel
+
+example : loopInstance.runL [0] [0] = none := by decide +kernel
+
+/-- The net of an instance is computed: firing its transition agrees with `runL`. -/
+example : loopInstance.toPetriNet.run {⟨0, by decide⟩} [⟨0, by decide⟩] =
+    some {⟨0, by decide⟩} := by
+  decide +kernel
+
+example : drainInstance.toPetriNet.run {⟨0, by decide⟩} [⟨0, by decide⟩] = some 0 := by
+  decide +kernel
+
+example : drainInstance.Reachable :=
+  ReachInstance.reachable_iff_exists_accepts.2 ⟨[0], [0], by decide +kernel, by decide +kernel⟩
+
+/-- The translation of the Petri net with one place and one transition that moves a token from the
+place to itself is a VAS of dimension `3`. -/
+example : loopInstance.lockInput.1.1 = 3 := by decide +kernel
+
+example : loopInstance.lockInput.1.2 = [[-1, -1, 1], [1, 1, -1]] := by decide +kernel
 
 end CslibTests
