@@ -123,6 +123,8 @@ public import Cslib.Computability.PetriNets.Coverability
 public import Cslib.Computability.PetriNets.CoverabilityBasis
 public import Cslib.Computability.PetriNets.Decision.Boundedness
 public import Cslib.Computability.PetriNets.Decision.Coverability
+public import Cslib.Computability.PetriNets.Decision.Structure
+public import Cslib.Computability.PetriNets.FreeChoice
 public import Cslib.Computability.PetriNets.Monotonicity
 public import Cslib.Computability.PetriNets.PlaceInvariants
 public import Cslib.Computability.PetriNets.Semantics
@@ -191,6 +193,7 @@ public import Cslib.Foundations.Data.PFunctor.Free.Fold
 public import Cslib.Foundations.Data.PFunctor.Free.W
 public import Cslib.Foundations.Data.Polynomial.Monotone
 public import Cslib.Foundations.Data.Search
+public import Cslib.Foundations.Data.Set.Ranking
 public import Cslib.Foundations.Data.Set.Saturation
 public import Cslib.Foundations.Data.StackTape
 public import Cslib.Foundations.Lint.Basic

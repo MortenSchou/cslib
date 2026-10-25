@@ -22,7 +22,7 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 - **Semantics through `LTS`.** The marking graph of a net is an `LTS` whose labels are the
   transitions (`PetriNet.lts`). Reachability, bisimilarity, trace equivalence, and HML are therefore
   inherited from [Foundations](../../Foundations) and [Logics](../../Logics). The marking graph is
-  deterministic.
+  deterministic, so bisimilarity of markings coincides with trace equivalence.
 - **Notation.** The scoped notation `•[N] t`, `t •[N]`, `M [t⟩[N]`, `M [t⟩[N] M'` and `M ⇝[N] M'`.
 
 ## Contents
@@ -43,6 +43,9 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Decision/Coverability` | decidable coverability for nets over finitely many places: the net-specific predecessor basis `•[N] t + (b - t •[N])` fed to the generic `WSTS.decidableCoverable` |
 | `Decision/Boundedness` | decidable boundedness for nets over finitely many places |
 | [`Search`](../../Foundations/Data/Search.lean) | `searchIter`/`searchNat`: searches that `decide` can evaluate, used by the decision procedures |
+| `FreeChoice` | free-choice nets and Commoner's theorem: an ordinary free-choice net is live iff every siphon contains a marked trap |
+| [`Ranking`](../../Foundations/Data/Set/Ranking.lean) | `exists_rank`: ranking a finite set by successive exits, used for the necessity half of Commoner's theorem |
+| `Decision/Structure` | decidable structural properties (conservative, ordinary, free-choice, siphon-trap) |
 
 ## Plans and notes
 

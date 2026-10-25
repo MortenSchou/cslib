@@ -10,6 +10,8 @@ import Cslib.Computability.PetriNets.Coverability
 import Cslib.Computability.PetriNets.CoverabilityBasis
 import Cslib.Computability.PetriNets.Decision.Boundedness
 import Cslib.Computability.PetriNets.Decision.Coverability
+import Cslib.Computability.PetriNets.Decision.Structure
+import Cslib.Computability.PetriNets.FreeChoice
 import Cslib.Computability.PetriNets.Monotonicity
 import Cslib.Computability.PetriNets.PlaceInvariants
 import Cslib.Computability.PetriNets.Semantics
@@ -346,5 +348,75 @@ example (M M' : Marking Bool) (h : cycleNet.lts.MTr M [false, true] M') : M' = M
 tokens it produces. -/
 example (M M' : Marking Bool) (h : cycleNet.lts.MTr M [false, true] M') : M' = M :=
   (mTr_eq_iff_sum_pre_eq h).2 (by decide)
+
+/-! ### Structure
+
+The structural properties of nets are decidable. -/
+
+/-- The producer/consumer net is ordinary, free-choice and conservative. -/
+example : prodCons.Ordinary := by decide
+
+example : prodCons.IsFreeChoice := by decide
+
+example : prodCons.Conservative := by decide
+
+/-! ### Free-choice nets and Commoner's theorem -/
+
+inductive Tr3 | a | b | c
+  deriving DecidableEq
+
+instance : Fintype Tr3 := ⟨{Tr3.a, Tr3.b, Tr3.c}, fun x => by cases x <;> simp⟩
+
+/-- The producer/consumer net closed into a ring by a transition returning the token. -/
+def ring : PetriNet Pl Tr3 where
+  pre | .a => {producing} | .b => {buffer} | .c => {consuming}
+  post | .a => {buffer} | .b => {consuming} | .c => {producing}
+
+/-- The hypotheses of Commoner's criterion are all decided: the ring is ordinary and free-choice,
+and every nonempty siphon contains a trap marked at the initial marking. Hence the ring is live. -/
+example : ring.Ordinary := by decide
+
+example : ring.IsFreeChoice := by decide
+
+example : ring.SiphonTrap {producing} := by decide
+
+example : ring.Live {producing} :=
+  live_of_siphons_contain_marked_trap (by decide) (by decide) (by decide)
+
+/-- Commoner's theorem for the ring: it is live exactly when it has the siphon-trap property. -/
+example : ring.Live {producing} :=
+  (live_iff_siphonTrap (by decide) (by decide) (by decide)).2 (by decide)
+
+inductive Pl4 | i | p | q | o
+  deriving DecidableEq
+
+instance : Fintype Pl4 := ⟨{.i, .p, .q, .o}, fun x => by cases x <;> simp⟩
+
+inductive Tr5 | a | b | c | d | e
+  deriving DecidableEq
+
+instance : Fintype Tr5 := ⟨{.a, .b, .c, .d, .e}, fun x => by cases x <;> simp⟩
+
+/-- A free-choice net in which the token on the cycle `i → p → q → i` may escape through `d` to a
+place `o` that only loops. -/
+def escapeNet : PetriNet Pl4 Tr5 where
+  pre | .a => {.i} | .b => {.p} | .c => {.q} | .d => {.p} | .e => {.o}
+  post | .a => {.p} | .b => {.q} | .c => {.i} | .d => {.o} | .e => {.o}
+
+/-- The escape net is not live. Reachability alone would not show this easily, but the converse of
+Commoner's theorem reduces it to a finite check: the siphon `{i, p, q}` contains no trap. -/
+example : ¬ escapeNet.Live {Pl4.i} := fun hl =>
+  (by decide : ¬ escapeNet.SiphonTrap {Pl4.i})
+    (siphonTrap_of_live (by decide) (by decide) hl (by decide))
+
+/-- Without a token, the siphon-trap property fails: the empty marking marks no trap. -/
+example : ¬ ring.SiphonTrap 0 := by decide
+
+/-- Two transitions sharing `producing` but with different presets break free choice. -/
+def confusion : PetriNet Pl Tr where
+  pre | produce => {producing} | consume => {producing, buffer}
+  post | produce => {buffer} | consume => {consuming}
+
+example : ¬ confusion.IsFreeChoice := by decide
 
 end CslibTests
