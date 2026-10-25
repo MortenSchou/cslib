@@ -124,7 +124,10 @@ public import Cslib.Computability.PetriNets.CoverabilityBasis
 public import Cslib.Computability.PetriNets.Decision.Boundedness
 public import Cslib.Computability.PetriNets.Decision.Coverability
 public import Cslib.Computability.PetriNets.Monotonicity
+public import Cslib.Computability.PetriNets.PlaceInvariants
 public import Cslib.Computability.PetriNets.Semantics
+public import Cslib.Computability.PetriNets.StateEquation
+public import Cslib.Computability.PetriNets.Structure
 public import Cslib.Computability.PetriNets.Unboundedness
 public import Cslib.Computability.PetriNets.WSTS
 public import Cslib.Computability.QueryComplexity.Defs

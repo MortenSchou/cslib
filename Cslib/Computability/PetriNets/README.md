@@ -32,6 +32,9 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Basic` | nets, markings, enabling, firing, the computable firing rule; notation |
 | `Semantics` | marking graph, reachability, boundedness, safeness, liveness, conservative nets |
 | `Monotonicity` | adding tokens preserves firing (`StronglyMonotone` for every net); boundedness is downward closed |
+| `StateEquation` | incidence, effect of a firing sequence, T-invariants |
+| `PlaceInvariants` | weighted token counts preserved by firing, and the bounds they give |
+| `Structure` | siphons, traps, and a deadlock-freedom criterion for ordinary nets |
 | `Coverability` | coverability (`WSTS.Coverable` of the marking graph) and the pumping lemma; Dickson's lemma for multisets |
 | `CoverabilityBasis` | upward-closed sets of markings have finite bases |
 | `BackwardCoverability` | the backward coverability iteration and its termination (specialisations of the generic `WSTS` ones) |
