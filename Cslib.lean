@@ -117,6 +117,8 @@ public import Cslib.Computability.Machines.Turing.MultiTape.TapeLemmas
 public import Cslib.Computability.Machines.Turing.SingleTape.Defs
 public import Cslib.Computability.Machines.Turing.SingleTape.Deterministic
 public import Cslib.Computability.Machines.Turing.SingleTape.NonDeterministic
+public import Cslib.Computability.PetriNets.Basic
+public import Cslib.Computability.PetriNets.Semantics
 public import Cslib.Computability.QueryComplexity.Defs
 public import Cslib.Computability.QueryComplexity.Measures
 public import Cslib.Computability.URM.Basic
