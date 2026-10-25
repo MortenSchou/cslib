@@ -30,6 +30,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 |------|----------|
 | `Basic` | nets, markings, enabling, firing, the computable firing rule; notation |
 | `Semantics` | marking graph, reachability, boundedness, safeness, liveness, conservative nets |
+| `Independence` | commuting transitions (an instance of the generic [`LTS.CommutesWith`](../../Foundations/Semantics/LTS/Commutation.lean)), conflicts, and the diamond property of non-conflicting transitions |
+| `StubbornSets` | Valmari-style stubborn sets, a structural criterion for them, and deadlock preservation of the reduced marking graph; an instance of the generic [`LTS.reduced`](../../Foundations/Semantics/LTS/Reduction.lean) theory |
 
 ## Plans and notes
 
