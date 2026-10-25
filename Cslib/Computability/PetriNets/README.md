@@ -39,9 +39,11 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | [`WSTS`](WSTS.lean) | nets as well-structured transition systems; `instWSTS` over finitely many places, and the characterisation of infinite firing sequences via [`Computability/WSTS`](../WSTS) |
 | `Decision/Coverability` | decidable coverability for nets over finitely many places: the net-specific predecessor basis `•[N] t + (b - t •[N])` fed to the generic `WSTS.decidableCoverable` |
 | `Decision/Boundedness` | decidable boundedness for nets over finitely many places |
+| `Labelled` | marking graph with transitions relabelled (used by `Languages/CCS/PetriNet`) |
 | [`Search`](../../Foundations/Data/Search.lean) | `searchIter`/`searchNat`: searches that `decide` can evaluate, used by the decision procedures |
 
 ## Plans and notes
 
 - Not yet formalised: reachability for unbounded nets, the Karp–Miller tree, coloured and
-  inhibitor-arc nets.
+  inhibitor-arc nets, and a *finite* net encoding of CCS (the encoding in `Languages/CCS/PetriNet`
+  has all processes as places).

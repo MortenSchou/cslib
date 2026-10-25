@@ -2,6 +2,7 @@ import CslibTests.Bisimulation
 import CslibTests.BooleanCircuits
 import CslibTests.CCS
 import CslibTests.CCS.VendingMachine
+import CslibTests.CCSPetriNet
 import CslibTests.CLL
 import CslibTests.CircuitComplexity
 import CslibTests.CircuitComposition
