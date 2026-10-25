@@ -61,6 +61,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `RemovePlace` | deleting a place and restricting markings (`removePlace`, `Marking.drop`, both computable); firings, firing sequences and reachability descend to the reduced net; isolated places |
 | `Reduction` | Murata's reduction of places: redundant (implicit) places, self-loop places, parallel places and isolated places; deleting a redundant place preserves firing sequences (bisimilarity), deadlocks and liveness, and `N` is bounded iff the reduced net and the deleted place are |
 | `ReductionTransition` | fusion of parallel transitions; preserves reachable markings, bisimilarity of the labelled marking graph, liveness, boundedness and deadlocks |
+| `SelfLoopTransition` | elimination of self-loop transitions (Murata ESLT): a transition with equal preset and postset can be deleted; the reachable markings, boundedness, safeness and the weak traces (weak bisimilarity, the deleted transition being invisible) are preserved; deadlocks and liveness are preserved under side conditions (the deleted transition is never the only enabled one; it is live whenever the reduced net is), which hold for a live net |
+| `ReductionTransitionWF` | deleting one of two parallel transitions preserves and reflects the structure of a workflow net and its soundness, for the same source and sink |
 
 ## Plans and notes
 

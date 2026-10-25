@@ -22,7 +22,9 @@ import Cslib.Computability.PetriNets.Monotonicity
 import Cslib.Computability.PetriNets.PlaceInvariants
 import Cslib.Computability.PetriNets.Reduction
 import Cslib.Computability.PetriNets.ReductionTransition
+import Cslib.Computability.PetriNets.ReductionTransitionWF
 import Cslib.Computability.PetriNets.RemovePlace
+import Cslib.Computability.PetriNets.SelfLoopTransition
 import Cslib.Computability.PetriNets.Semantics
 import Cslib.Computability.PetriNets.SeriesPlaceReduction
 import Cslib.Computability.PetriNets.SeriesReduction
@@ -763,5 +765,19 @@ example : (prodCons.fuseDelete consume buffer).pre ⟨produce, by decide⟩ =
 /-- The fused net is live exactly when `prodCons` is. -/
 example : (prodCons.fuse consume buffer).Live {producing} ↔ prodCons.Live {producing} :=
   IsSeries.live_fuse_iff (t₁ := produce) (by decide) (by decide)
+
+/-- `produce` only tests for a token in `producing`; `consume` moves it on. -/
+def loopNet : PetriNet Pl Tr where
+  pre | produce => {producing} | consume => {producing}
+  post | produce => {producing} | consume => {consuming}
+
+example : loopNet.IsSelfLoopTransition produce := by decide
+
+example : ¬ prodCons.IsSelfLoopTransition produce := by decide
+
+/-- Deleting the self-loop `produce` keeps the reachable markings. -/
+example : ({producing} ⇝[loopNet.removeTransition produce] {consuming}) ↔
+    ({producing} ⇝[loopNet] {consuming}) :=
+  IsSelfLoopTransition.reachable_removeTransition_iff (by decide)
 
 end CslibTests
