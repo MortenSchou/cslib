@@ -5,7 +5,9 @@ Authors: Morten Schou
 -/
 
 import Cslib.Computability.PetriNets.Basic
+import Cslib.Computability.PetriNets.ConflictFree
 import Cslib.Computability.PetriNets.PlaceInvariants
+import Cslib.Computability.PetriNets.ReachabilityConditions
 import Cslib.Computability.PetriNets.Semantics
 import Cslib.Computability.PetriNets.StateEquation
 import Cslib.Computability.PetriNets.Structure
@@ -204,5 +206,29 @@ example (M M' : Marking Bool) (h : cycleNet.lts.MTr M [false, true] M') : M' = M
 tokens it produces. -/
 example (M M' : Marking Bool) (h : cycleNet.lts.MTr M [false, true] M') : M' = M :=
   (mTr_eq_iff_sum_pre_eq h).2 (by decide)
+
+/-! ### Conflict-free nets -/
+
+/-- Every place of the producer/consumer net is an input of at most one transition. -/
+theorem prodCons_conflictFree : prodCons.ConflictFree := by
+  unfold ConflictFree
+  decide
+
+/-- The firing count vector `{produce, consume}` is firable at `{producing}`. -/
+example : prodCons.Firable {producing} {produce, consume} :=
+  ⟨[produce, consume], {consuming}, run_eq_some_iff.1 (by decide), rfl⟩
+
+/-! ### Flow-acyclic nets -/
+
+/-- The producer feeds the consumer but not conversely, so the net is flow-acyclic and its
+reachability is decided by the state equation (`FlowAcyclic.reachable_iff`). -/
+theorem prodCons_flowAcyclic : prodCons.FlowAcyclic :=
+  Subrelation.wf (r := InvImage (· < ·) fun t : Tr => if t = produce then 0 else 1)
+    (fun {u t} ⟨p, hu, ht⟩ => by cases u <;> cases t <;> cases p <;> simp_all [prodCons, InvImage])
+    (InvImage.wf _ wellFounded_lt)
+
+/-- Reachability from a solution of the state equation. -/
+example : ({producing} : Marking Pl) ⇝[prodCons] {consuming} :=
+  prodCons_flowAcyclic.reachable_iff.2 ⟨{produce, consume}, by decide⟩
 
 end CslibTests

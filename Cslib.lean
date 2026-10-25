@@ -118,7 +118,9 @@ public import Cslib.Computability.Machines.Turing.SingleTape.Defs
 public import Cslib.Computability.Machines.Turing.SingleTape.Deterministic
 public import Cslib.Computability.Machines.Turing.SingleTape.NonDeterministic
 public import Cslib.Computability.PetriNets.Basic
+public import Cslib.Computability.PetriNets.ConflictFree
 public import Cslib.Computability.PetriNets.PlaceInvariants
+public import Cslib.Computability.PetriNets.ReachabilityConditions
 public import Cslib.Computability.PetriNets.Semantics
 public import Cslib.Computability.PetriNets.StateEquation
 public import Cslib.Computability.PetriNets.Structure

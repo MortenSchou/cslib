@@ -20,6 +20,9 @@ sufficient) condition for reachability.
 
 The multiset form needs no decidable equality on places; the integer form does, to count tokens.
 
+A *firing count vector* records how often each transition fires; it is a multiset of transitions.
+The firing count vector (Parikh vector) of a firing sequence `ts` is `(ts : Multiset Transition)`.
+
 ## Main definitions
 
 - `PetriNet.Marking.toInt`: view a marking as an integer vector.
@@ -29,6 +32,8 @@ The multiset form needs no decidable equality on places; the integer form does, 
 ## Main statements
 
 - `PetriNet.mTr_add_sum_pre`: the state equation for firing sequences, on multisets.
+- `PetriNet.Reachable.exists_add_sum_pre`: the state equation has a solution, a firing count
+  vector, at every reachable marking.
 - `PetriNet.mTr_toInt`: the state equation for firing sequences, on integer vectors.
 - `PetriNet.Reachable.exists_toInt_eq`: the state equation for reachable markings.
 - `PetriNet.mTr_eq_iff_effect_eq_zero`: a firing sequence returns to its start iff its effect is
@@ -75,6 +80,51 @@ theorem mTr_eq_iff_sum_pre_eq {M M' : Marking Place} {ts : List Transition}
   · intro h0
     rw [h0] at heq
     exact add_right_cancel heq
+
+/-- The state equation for reachable markings, on multisets: if `M'` is reachable from `M`, some
+firing count vector `σ` (the firing count vector of a firing sequence) satisfies
+`M' + Σ pre = M + Σ post`. -/
+theorem Reachable.exists_add_sum_pre {M M' : Marking Place} (h : M ⇝[N] M') :
+    ∃ σ : Multiset Transition, M' + (σ.map N.pre).sum = M + (σ.map N.post).sum :=
+  let ⟨ts, hts⟩ := h
+  ⟨ts, mTr_add_sum_pre hts⟩
+
+/-- A larger firing count vector consumes (or produces) more tokens. -/
+theorem sum_map_le_of_le {σ τ : Multiset Transition} (h : σ ≤ τ) (f : Transition → Marking Place) :
+    (σ.map f).sum ≤ (τ.map f).sum := by
+  obtain ⟨ρ, rfl⟩ := exists_add_of_le h
+  rw [Multiset.map_add, Multiset.sum_add]
+  exact le_self_add
+
+section Count
+
+variable [DecidableEq Place] [DecidableEq Transition] {f : Transition → Marking Place}
+  {u v : Transition} {p : Place}
+
+/-- If every occurrence of `u` puts a token in `p`, then `σ` puts at least `σ.count u` tokens in
+`p`. -/
+theorem count_le_count_sum_map (hu : p ∈ f u) (σ : Multiset Transition) :
+    σ.count u ≤ ((σ.map f).sum).count p := by
+  have := Multiset.count_le_of_le p
+    (sum_map_le_of_le (Multiset.le_count_iff_replicate_le.1 (le_refl (σ.count u))) f)
+  rw [Multiset.map_replicate, Multiset.sum_replicate, Multiset.count_nsmul] at this
+  exact (Nat.le_mul_of_pos_right _ (Multiset.count_pos.2 hu)).trans this
+
+/-- Two distinct transitions that both put a token in `p` contribute their counts separately. -/
+theorem count_add_count_le_count_sum_map (hu : p ∈ f u) (hv : p ∈ f v) (huv : u ≠ v)
+    (σ : Multiset Transition) : σ.count u + σ.count v ≤ ((σ.map f).sum).count p := by
+  have hle : Multiset.replicate (σ.count u) u + Multiset.replicate (σ.count v) v ≤ σ :=
+    Multiset.le_iff_count.2 fun x => by
+      simp only [Multiset.count_add, Multiset.count_replicate]
+      split_ifs <;> subst_vars <;> simp_all
+  have := Multiset.count_le_of_le p (sum_map_le_of_le hle f)
+  simp only [Multiset.map_add, Multiset.map_replicate, Multiset.sum_add, Multiset.sum_replicate,
+    Multiset.count_add, Multiset.count_nsmul] at this
+  have h₁ := Nat.le_mul_of_pos_right (σ.count u) (Multiset.count_pos.2 hu)
+  have h₂ := Nat.le_mul_of_pos_right (σ.count v) (Multiset.count_pos.2 hv)
+  omega
+
+end Count
 
 section Int
 
