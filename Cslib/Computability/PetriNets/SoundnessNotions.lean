@@ -25,9 +25,10 @@ source `i` and sink `o`:
 
 Generalized soundness quantifies over all numbers of cases, so it cannot be decided by exploring
 one state space. It is decidable for workflow nets without reset or inhibitor arcs (van Hee,
-Sidorova and Voorhoeve), by an algebraic argument that is not formalised here. Failing up-to-`k`
-soundness for some `k` refutes generalized soundness;
-`PetriNet.not_generalizedSound_of_not_upToKSound` states this.
+Sidorova and Voorhoeve), by an algebraic argument that is not formalised here. Up-to-`k`
+soundness is decided for each `k` in `Decision.SoundnessNotions`, which refutes generalized
+soundness whenever it fails at some `k`; `PetriNet.not_generalizedSound_of_not_upToKSound` states
+this.
 
 ## Main definitions
 

@@ -11,6 +11,10 @@ import Cslib.Computability.PetriNets.Coverability
 import Cslib.Computability.PetriNets.CoverabilityBasis
 import Cslib.Computability.PetriNets.Decision.Boundedness
 import Cslib.Computability.PetriNets.Decision.Coverability
+import Cslib.Computability.PetriNets.Decision.Language
+import Cslib.Computability.PetriNets.Decision.Reachability
+import Cslib.Computability.PetriNets.Decision.Soundness
+import Cslib.Computability.PetriNets.Decision.SoundnessNotions
 import Cslib.Computability.PetriNets.Decision.Structure
 import Cslib.Computability.PetriNets.Equivalence
 import Cslib.Computability.PetriNets.FreeChoice
@@ -556,5 +560,152 @@ example : TheoryEq (HML.Model.mk prodCons.lts (fun _ (_ : Unit) => True)).toModa
     {consuming} {consuming, consuming} :=
   (theoryEq_iff_bisimilar prodCons _ (fun _ _ => Iff.rfl) _ _).2
     (bisimilar_of_dead _ dead_one dead_two)
+
+/-! ### Firing languages, decided -/
+
+/-- Membership in a firing language is decided by running the net. -/
+example : [produce, produce, consume] ∈ prodCons.firingLanguage M₀ {{buffer, consuming}} := by
+  decide
+
+example : [consume] ∉ prodCons.firingLanguage M₀ {{buffer, consuming}} := by decide
+
+example : [produce] ∉ prodCons.firingLanguage M₀ {{buffer, consuming}} := by decide
+
+/-! ### Reachability and deadlocks of bounded nets -/
+
+/-- The ring reaches all its markings within two steps. -/
+example : ring.Closed {producing} 2 := by decide
+
+/-- For bounded nets, reachability and deadlock reachability are decided once boundedness is
+available as a `Fact`. -/
+instance : Fact (ring.Bounded {producing}) := ⟨by decide⟩
+
+instance : Fact (prodCons.Bounded M₀) := ⟨by decide⟩
+
+example : ({producing} : Marking Pl) ⇝[ring] {consuming} := by decide
+
+/-- A second token cannot appear in the ring. -/
+example : ¬ ({producing} : Marking Pl) ⇝[ring] {producing, producing} := by decide
+
+/-- The ring never reaches a dead marking, as Commoner's criterion also shows. -/
+example : ¬ ∃ M, {producing} ⇝[ring] M ∧ ring.Dead M := by decide
+
+/-- The producer/consumer net with two producers reaches a dead marking. -/
+example : ∃ M, M₀ ⇝[prodCons] M ∧ prodCons.Dead M := by decide
+
+/-! ### Decidable soundness -/
+
+/-- A workflow in which `produce` leaves a token in `buffer` besides finishing the case. -/
+def leaky : PetriNet Pl Tr where
+  pre | produce => {producing} | consume => {buffer}
+  post | produce => {buffer, consuming} | consume => {consuming}
+
+/-- Soundness is decided outright, in both directions. The leaky workflow is unsound: after
+`produce`, the sink is marked but so is `buffer`. -/
+example : prodCons.Sound producing consuming := by decide
+
+example : ¬ leaky.Sound producing consuming := by decide
+
+/-- An unbounded net is never sound; the decision finds the pumping pair. -/
+example : ¬ source.Sound () () := by decide
+
+/-- A single token circulating in the ring can always be moved to any place, so the ring is sound
+for every choice of source and sink. -/
+example : ring.Sound producing buffer := by decide
+
+/-- By van der Aalst's theorem, the short circuit of the sound workflow is live and bounded. -/
+example : (prodCons.shortCircuit producing consuming).Live (token producing) ∧
+    (prodCons.shortCircuit producing consuming).Bounded (token producing) :=
+  sound_iff_live_and_bounded.1 (by decide)
+
+/-! ### Notions of soundness -/
+
+open Pl4 Tr5 in
+/-- A net with a bad branch: `a` splits the case into `p` and `q`, after which `b` completes
+without `q`, leaving a token behind, while `e` completes properly. The other route `c; b` is
+fine. -/
+def choiceNet : PetriNet Pl4 Tr5 where
+  pre | .a => {.i} | .b => {.p} | .c => {.i} | .d => {.q} | .e => {.p, .q}
+  post | .a => {.p, .q} | .b => {.o} | .c => {.p} | .d => {.q} | .e => {.o}
+
+open Pl4 Tr5 in
+/-- A net that is sound for one token in `i` apart from the dead transition `e`, and that is not
+sound for two tokens: `e` merges the two branches into a single token. -/
+def joinNet : PetriNet Pl4 Tr5 where
+  pre | .a => {.i} | .b => {.p} | .c => {.i} | .d => {.q} | .e => {.p, .q}
+  post | .a => {.p} | .b => {.o} | .c => {.q} | .d => {.o} | .e => {.o}
+
+instance : Fact (choiceNet.Bounded (token Pl4.i)) := ⟨by decide⟩
+
+instance : Fact (joinNet.Bounded (token Pl4.i)) := ⟨by decide⟩
+
+instance : Fact (joinNet.Bounded (2 • token Pl4.i)) := ⟨by decide⟩
+
+instance : Fact (prodCons.Bounded (token producing)) := ⟨by decide⟩
+
+instance : Fact (prodCons.Bounded (2 • token producing)) := ⟨by decide⟩
+
+/-- The choice net is relaxed sound, lazy sound and easy sound, but neither weakly nor classically
+sound. -/
+example : choiceNet.RelaxedSound Pl4.i Pl4.o := by decide
+
+example : choiceNet.LazySound Pl4.i Pl4.o := by decide
+
+example : choiceNet.EasySound Pl4.i Pl4.o := by decide
+
+example : ¬ choiceNet.WeakSound Pl4.i Pl4.o := by decide
+
+example : ¬ choiceNet.Sound Pl4.i Pl4.o := by decide
+
+/-- The join net is weakly sound but has a dead transition, and is not `2`-sound. -/
+example : joinNet.WeakSound Pl4.i Pl4.o := by decide
+
+example : ¬ joinNet.Sound Pl4.i Pl4.o := by decide
+
+example : ¬ joinNet.RelaxedSound Pl4.i Pl4.o := by decide
+
+example : ¬ joinNet.KSound Pl4.i Pl4.o 2 := by decide
+
+example : ¬ joinNet.UpToKSound Pl4.i Pl4.o 2 := by decide
+
+/-- Generalized soundness is refuted by a `k` for which the net is not `k`-sound: the join net is
+not generalized sound since it is not `2`-sound, and the choice net since it is not weakly
+sound. -/
+example : ¬ joinNet.GeneralizedSound Pl4.i Pl4.o :=
+  not_generalizedSound_of_not_upToKSound (k := 2) (by decide)
+
+example : ¬ choiceNet.GeneralizedSound Pl4.i Pl4.o := fun h => absurd h.weak (by decide)
+
+/-- The producer/consumer net is sound, and `1`- and `2`-sound. -/
+example : prodCons.KSound producing consuming 2 := by decide
+
+example : prodCons.UpToKSound producing consuming 2 := by decide
+
+example : prodCons.LazySound producing consuming := by decide
+
+/-- A weakly sound net is lazy sound, as the sink has no output transition, and a sound net is
+weakly and relaxed sound. -/
+example : prodCons.LazySound producing consuming :=
+  LazySound.of_weak (fun t => by cases t <;> decide) (by decide)
+
+example : prodCons.RelaxedSound producing consuming :=
+  Sound.relaxed (by decide)
+
+/-- The producer/consumer net is a workflow net, which `decide` checks by computing reachability in
+its flow graph. -/
+theorem prodCons_wf : prodCons.IsWFNet producing consuming := by decide
+
+/-- The producer/consumer net with the sink and source swapped is not a workflow net. -/
+example : ¬ prodCons.IsWFNet consuming producing := by decide
+
+/-- The nets of the previous examples are workflow nets too. -/
+example : choiceNet.IsWFNet Pl4.i Pl4.o := by decide
+
+example : joinNet.IsWFNet Pl4.i Pl4.o := by decide
+
+/-- Hence proper completion follows from the option to complete, which `decide` establishes. -/
+example : ∀ M, prodCons.Reachable (token producing) M → token consuming ≤ M →
+    M = token consuming :=
+  prodCons_wf.proper_of_completion (weakSound_iff.1 (by decide))
 
 end CslibTests

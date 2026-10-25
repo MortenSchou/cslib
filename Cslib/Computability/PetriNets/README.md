@@ -50,8 +50,14 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Soundness` | soundness of workflow nets ⟺ short circuit live and bounded |
 | `Automaton` | firing languages of bounded nets are regular |
 | `Equivalence` | bisimilarity and HML equivalence of markings |
+| [`FiniteClosure`](../../Foundations/Relation/FiniteClosure.lean) | reachability in finite relations is decidable (`ReflTransGen`), used to decide `IsWFNet` |
+| `Decision/Language` | membership in firing languages of nets is decidable |
+| `Decision/Reachability` | reachability and deadlock reachability for bounded nets |
+| `Decision/SoundnessNotions` | decision procedures for the notions of soundness on bounded nets |
+| `Decision/Soundness` | soundness of nets is decidable |
 
 ## Plans and notes
 
 - Not yet formalised: reachability for unbounded nets, the Karp–Miller tree, coloured and
-  inhibitor-arc nets.
+  inhibitor-arc nets, and a decision procedure for generalized soundness (the notion is defined, and
+  refuted whenever up-to-`k` soundness fails for some `k`).

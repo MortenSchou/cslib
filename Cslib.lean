@@ -124,6 +124,10 @@ public import Cslib.Computability.PetriNets.Coverability
 public import Cslib.Computability.PetriNets.CoverabilityBasis
 public import Cslib.Computability.PetriNets.Decision.Boundedness
 public import Cslib.Computability.PetriNets.Decision.Coverability
+public import Cslib.Computability.PetriNets.Decision.Language
+public import Cslib.Computability.PetriNets.Decision.Reachability
+public import Cslib.Computability.PetriNets.Decision.Soundness
+public import Cslib.Computability.PetriNets.Decision.SoundnessNotions
 public import Cslib.Computability.PetriNets.Decision.Structure
 public import Cslib.Computability.PetriNets.Equivalence
 public import Cslib.Computability.PetriNets.FreeChoice
@@ -212,6 +216,7 @@ public import Cslib.Foundations.Relation.Confluence
 public import Cslib.Foundations.Relation.Defs
 public import Cslib.Foundations.Relation.Domain
 public import Cslib.Foundations.Relation.Euclidean
+public import Cslib.Foundations.Relation.FiniteClosure
 public import Cslib.Foundations.Relation.Preserves
 public import Cslib.Foundations.Relation.RelatesInSteps
 public import Cslib.Foundations.Relation.Restriction
