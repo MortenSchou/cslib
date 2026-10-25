@@ -22,7 +22,7 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 - **Semantics through `LTS`.** The marking graph of a net is an `LTS` whose labels are the
   transitions (`PetriNet.lts`). Reachability, bisimilarity, trace equivalence, and HML are therefore
   inherited from [Foundations](../../Foundations) and [Logics](../../Logics). The marking graph is
-  deterministic.
+  deterministic, so bisimilarity of markings coincides with trace equivalence.
 - **Notation.** The scoped notation `•[N] t`, `t •[N]`, `M [t⟩[N]`, `M [t⟩[N] M'` and `M ⇝[N] M'`.
 
 ## Contents
@@ -32,6 +32,9 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Basic` | nets, markings, enabling, firing, the computable firing rule; notation |
 | `Semantics` | marking graph, reachability, boundedness, safeness, liveness, conservative nets |
 | `Monotonicity` | adding tokens preserves firing (`StronglyMonotone` for every net); boundedness is downward closed |
+| `StateEquation` | incidence, effect of a firing sequence, T-invariants |
+| `PlaceInvariants` | weighted token counts preserved by firing, and the bounds they give |
+| `Structure` | siphons, traps, and a deadlock-freedom criterion for ordinary nets |
 | `Coverability` | coverability (`WSTS.Coverable` of the marking graph) and the pumping lemma; Dickson's lemma for multisets |
 | `CoverabilityBasis` | upward-closed sets of markings have finite bases |
 | `BackwardCoverability` | the backward coverability iteration and its termination (specialisations of the generic `WSTS` ones) |
@@ -41,9 +44,22 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Decision/Boundedness` | decidable boundedness for nets over finitely many places |
 | `Labelled` | marking graph with transitions relabelled (used by `Languages/CCS/PetriNet`) |
 | [`Search`](../../Foundations/Data/Search.lean) | `searchIter`/`searchNat`: searches that `decide` can evaluate, used by the decision procedures |
+| `FreeChoice` | free-choice nets and Commoner's theorem: an ordinary free-choice net is live iff every siphon contains a marked trap |
+| [`Ranking`](../../Foundations/Data/Set/Ranking.lean) | `exists_rank`: ranking a finite set by successive exits, used for the necessity half of Commoner's theorem |
+| `Decision/Structure` | decidable structural properties (conservative, ordinary, free-choice, siphon-trap) |
+| `SoundnessNotions` | workflow nets (`IsWFNet`) and the weak, `k`-, relaxed, lazy and easy notions of soundness |
+| `Soundness` | soundness of workflow nets ⟺ short circuit live and bounded |
+| `Automaton` | firing languages of bounded nets are regular |
+| `Equivalence` | bisimilarity and HML equivalence of markings |
+| [`FiniteClosure`](../../Foundations/Relation/FiniteClosure.lean) | reachability in finite relations is decidable (`ReflTransGen`), used to decide `IsWFNet` |
+| `Decision/Language` | membership in firing languages of nets is decidable |
+| `Decision/Reachability` | reachability and deadlock reachability for bounded nets |
+| `Decision/SoundnessNotions` | decision procedures for the notions of soundness on bounded nets |
+| `Decision/Soundness` | soundness of nets is decidable |
 
 ## Plans and notes
 
 - Not yet formalised: reachability for unbounded nets, the Karp–Miller tree, coloured and
-  inhibitor-arc nets, and a *finite* net encoding of CCS (the encoding in `Languages/CCS/PetriNet`
-  has all processes as places).
+  inhibitor-arc nets, a decision procedure for generalized soundness (the notion is defined, and
+  refuted whenever up-to-`k` soundness fails for some `k`), and a *finite* net encoding of CCS (the
+  encoding in `Languages/CCS/PetriNet` has all processes as places).
