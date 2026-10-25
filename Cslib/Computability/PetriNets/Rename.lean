@@ -18,7 +18,8 @@ deadlocks, liveness, the structure of a workflow net and soundness.
 
 Renaming is the means to keep long chains of reductions manageable. Deleting a place or a
 transition passes to a subtype, and `n` deletions give `n` nested subtypes; renaming the result to
-`Fin n` after each step keeps the types flat.
+`Fin n` after each step keeps the types flat (see
+`Cslib.Computability.PetriNets.Decision.ReductionSearch`).
 
 ## Main definitions
 

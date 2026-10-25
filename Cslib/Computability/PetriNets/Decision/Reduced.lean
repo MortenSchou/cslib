@@ -15,8 +15,10 @@ public import Cslib.Computability.PetriNets.ReducesTo
 Given a certificate `h : ReducesTo N M₀ N' M₀'` (or `h : ReducesWF N i o N' i' o'` for workflow
 nets) that `N'` is a reduction of `N`, a property of `N` is decided by deciding it for `N'` and
 transferring the answer along the iff-lemmas of `PetriNet.ReducesTo` and `PetriNet.ReducesWF`. The
-certificate is supplied by the user. It is a proof, which `decide` never evaluates, so only the
-reduced net is evaluated; the original net need not even have finitely many places or transitions.
+certificate is supplied by the user; the search for reductions is in
+`Cslib.Computability.PetriNets.Decision.AutoReduction`. It is a proof, which `decide` never
+evaluates, so only the reduced net is evaluated; the original net need not even have finitely many
+places or transitions.
 
 ## Main definitions
 

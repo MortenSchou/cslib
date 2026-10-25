@@ -123,11 +123,14 @@ public import Cslib.Computability.PetriNets.Basic
 public import Cslib.Computability.PetriNets.CTL
 public import Cslib.Computability.PetriNets.Coverability
 public import Cslib.Computability.PetriNets.CoverabilityBasis
+public import Cslib.Computability.PetriNets.Decision.AutoReduction
 public import Cslib.Computability.PetriNets.Decision.Boundedness
 public import Cslib.Computability.PetriNets.Decision.Coverability
 public import Cslib.Computability.PetriNets.Decision.Language
 public import Cslib.Computability.PetriNets.Decision.Reachability
 public import Cslib.Computability.PetriNets.Decision.Reduced
+public import Cslib.Computability.PetriNets.Decision.ReductionFin
+public import Cslib.Computability.PetriNets.Decision.ReductionSearch
 public import Cslib.Computability.PetriNets.Decision.Soundness
 public import Cslib.Computability.PetriNets.Decision.SoundnessNotions
 public import Cslib.Computability.PetriNets.Decision.Structure

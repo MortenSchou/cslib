@@ -62,10 +62,10 @@ For workflow nets `ReducesWF N i o N' i' o'` tracks the source and the sink thro
 fusions and the deletion of parallel transitions (`ReducesWF.removeTransition`), and
 `ReducesWF.isWFNet_and_sound` shows that `N'` is a workflow net, and sound iff `N` is. Reductions
 of places and the elimination of self-loop transitions are not included there. Soundness of the
-net with a redundant place deleted does not imply soundness of the net: a workflow net with a
-redundant (implicit) place can be unsound because the place keeps a token at a marking that is
-final in the reduced net, whereas the reduced net is a sound workflow net. Deleting a self-loop
-transition can destroy the workflow structure.
+net with a redundant place deleted does not imply soundness of the net: in
+`CslibTests.RedundantPlaceSoundness`, a workflow net with a redundant (implicit) place is unsound
+because the place keeps a token at a marking that is final in the reduced net, whereas the reduced
+net is a sound workflow net. Deleting a self-loop transition can destroy the workflow structure.
 
 Reductions of places and of transitions do not reduce the number of reachable markings (they only
 shrink the net), whereas fusion of series transitions or of series places does. They can still

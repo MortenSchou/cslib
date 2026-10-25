@@ -1,3 +1,4 @@
+import CslibTests.AutoReduction
 import CslibTests.Bisimulation
 import CslibTests.BooleanCircuits
 import CslibTests.CCS
@@ -40,5 +41,6 @@ import CslibTests.Query
 import CslibTests.QueryComplexity
 import CslibTests.ReducedDecisions
 import CslibTests.Reduction
+import CslibTests.RedundantPlaceSoundness
 import CslibTests.StatefulProcesses
 import CslibTests.Synthesis
