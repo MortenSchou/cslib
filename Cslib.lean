@@ -120,6 +120,7 @@ public import Cslib.Computability.Machines.Turing.SingleTape.NonDeterministic
 public import Cslib.Computability.PetriNets.Automaton
 public import Cslib.Computability.PetriNets.BackwardCoverability
 public import Cslib.Computability.PetriNets.Basic
+public import Cslib.Computability.PetriNets.CTL
 public import Cslib.Computability.PetriNets.Coverability
 public import Cslib.Computability.PetriNets.CoverabilityBasis
 public import Cslib.Computability.PetriNets.Decision.Boundedness
@@ -131,6 +132,7 @@ public import Cslib.Computability.PetriNets.Decision.SoundnessNotions
 public import Cslib.Computability.PetriNets.Decision.Structure
 public import Cslib.Computability.PetriNets.Equivalence
 public import Cslib.Computability.PetriNets.FreeChoice
+public import Cslib.Computability.PetriNets.LTL
 public import Cslib.Computability.PetriNets.Monotonicity
 public import Cslib.Computability.PetriNets.PlaceInvariants
 public import Cslib.Computability.PetriNets.Semantics

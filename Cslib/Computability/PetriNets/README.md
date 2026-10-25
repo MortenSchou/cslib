@@ -21,7 +21,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
   decidable equality of places.
 - **Semantics through `LTS`.** The marking graph of a net is an `LTS` whose labels are the
   transitions (`PetriNet.lts`). Reachability, bisimilarity, trace equivalence, and HML are therefore
-  inherited from [Foundations](../../Foundations) and [Logics](../../Logics). The marking graph is
+  inherited from [Foundations](../../Foundations) and [Logics](../../Logics), including the
+  temporal logics CTL and LTL of [Logics/Temporal](../../Logics/Temporal). The marking graph is
   deterministic, so bisimilarity of markings coincides with trace equivalence.
 - **Notation.** The scoped notation `•[N] t`, `t •[N]`, `M [t⟩[N]`, `M [t⟩[N] M'` and `M ⇝[N] M'`.
 
@@ -55,6 +56,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Decision/Reachability` | reachability and deadlock reachability for bounded nets |
 | `Decision/SoundnessNotions` | decision procedures for the notions of soundness on bounded nets |
 | `Decision/Soundness` | soundness of nets is decidable |
+| `CTL` | the marking graph as a CTL model; easy and `k`-soundness, liveness and deadlock-freeness as CTL formulas; CTL satisfaction is decidable for bounded nets |
+| `LTL` | LTL on the maximal firing sequences of a net; LTL model checking is decidable for bounded nets |
 
 ## Plans and notes
 
