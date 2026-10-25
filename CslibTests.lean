@@ -1,10 +1,12 @@
 import CslibTests.AmpleLTL
 import CslibTests.AmplePlaces
 import CslibTests.AmpleSets
+import CslibTests.AutoReduction
 import CslibTests.Bisimulation
 import CslibTests.BooleanCircuits
 import CslibTests.CCS
 import CslibTests.CCS.VendingMachine
+import CslibTests.CCSPetriNet
 import CslibTests.CLL
 import CslibTests.CTL
 import CslibTests.CircuitComplexity
@@ -40,7 +42,9 @@ import CslibTests.PRG
 import CslibTests.PetriNets
 import CslibTests.Query
 import CslibTests.QueryComplexity
+import CslibTests.ReducedDecisions
 import CslibTests.Reduction
+import CslibTests.RedundantPlaceSoundness
 import CslibTests.StatefulProcesses
 import CslibTests.StubbornSets
 import CslibTests.Synthesis

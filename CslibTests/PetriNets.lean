@@ -22,7 +22,14 @@ import Cslib.Computability.PetriNets.FreeChoice
 import Cslib.Computability.PetriNets.LTL
 import Cslib.Computability.PetriNets.Monotonicity
 import Cslib.Computability.PetriNets.PlaceInvariants
+import Cslib.Computability.PetriNets.Reduction
+import Cslib.Computability.PetriNets.ReductionTransition
+import Cslib.Computability.PetriNets.ReductionTransitionWF
+import Cslib.Computability.PetriNets.RemovePlace
+import Cslib.Computability.PetriNets.SelfLoopTransition
 import Cslib.Computability.PetriNets.Semantics
+import Cslib.Computability.PetriNets.SeriesPlaceReduction
+import Cslib.Computability.PetriNets.SeriesReduction
 import Cslib.Computability.PetriNets.Soundness
 import Cslib.Computability.PetriNets.SoundnessNotions
 import Cslib.Computability.PetriNets.StateEquation
@@ -790,5 +797,70 @@ example : ¬ ⇓LTL[prodCons.model,M₀ ⊨∃
     X (here (Tr := Tr) {buffer, buffer, buffer})] := by decide
 
 end LTL
+
+/-! ### Reductions of places and transitions -/
+
+/-- `produce` needs a token in `producing` and one in `buffer`, which are parallel places; `consume`
+empties `consuming`. -/
+def twinNet : PetriNet Pl Tr where
+  pre | produce => {producing, buffer} | consume => {consuming}
+  post | produce => {consuming} | consume => 0
+
+example : twinNet.ParallelPlaces producing buffer := by decide
+
+example : ¬ prodCons.IsIsolated buffer := by decide
+
+/-- Deleting a place is computable: here on markings and on the net. -/
+example : Marking.drop producing ({producing, buffer, buffer} : Marking Pl) =
+    {⟨buffer, by decide⟩, ⟨buffer, by decide⟩} := by decide
+
+example : (twinNet.removePlace producing).pre produce = {⟨buffer, by decide⟩} := by decide
+
+/-- With as many tokens in `producing` as in `buffer`, the place `producing` is redundant, so it can
+be deleted without changing the firing sequences. -/
+example : (twinNet.removePlace producing).lts.traces
+    (Marking.drop producing {producing, buffer}) = twinNet.lts.traces {producing, buffer} :=
+  (ParallelPlaces.redundantPlace (q := buffer) (by decide) (by decide)).traces_eq
+
+/-- Two copies of `produce`. -/
+def twinProduce : PetriNet Pl Bool where
+  pre _ := {producing}
+  post _ := {buffer}
+
+example : twinProduce.ParallelTransitions true false := by decide
+
+example : (twinProduce.removeTransition false).Live {producing} ↔ twinProduce.Live {producing} :=
+  ParallelTransitions.live_removeTransition_iff (t₁ := true) (by decide)
+
+/-! In `prodCons`, `produce → buffer → consume` is a series of transitions, and
+`buffer → consume → consuming` is a series of places. -/
+
+example : prodCons.IsSeries produce consume buffer := by decide
+
+example : prodCons.IsSeriesPlace consume buffer consuming := by decide
+
+/-- Fusing the series is computable: the fused `produce` moves the token to `consuming` at once. -/
+example : (prodCons.fuse consume buffer).post ⟨produce, by decide⟩ = {consuming} := by decide
+
+example : (prodCons.fuseDelete consume buffer).pre ⟨produce, by decide⟩ =
+    {⟨producing, by decide⟩} := by decide
+
+/-- The fused net is live exactly when `prodCons` is. -/
+example : (prodCons.fuse consume buffer).Live {producing} ↔ prodCons.Live {producing} :=
+  IsSeries.live_fuse_iff (t₁ := produce) (by decide) (by decide)
+
+/-- `produce` only tests for a token in `producing`; `consume` moves it on. -/
+def loopNet : PetriNet Pl Tr where
+  pre | produce => {producing} | consume => {producing}
+  post | produce => {producing} | consume => {consuming}
+
+example : loopNet.IsSelfLoopTransition produce := by decide
+
+example : ¬ prodCons.IsSelfLoopTransition produce := by decide
+
+/-- Deleting the self-loop `produce` keeps the reachable markings. -/
+example : ({producing} ⇝[loopNet.removeTransition produce] {consuming}) ↔
+    ({producing} ⇝[loopNet] {consuming}) :=
+  IsSelfLoopTransition.reachable_removeTransition_iff (by decide)
 
 end CslibTests
