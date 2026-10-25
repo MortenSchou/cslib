@@ -30,6 +30,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 |------|----------|
 | `Basic` | nets, markings, enabling, firing, the computable firing rule; notation |
 | `Semantics` | marking graph, reachability, boundedness, safeness, liveness, conservative nets |
+| `Automaton` | firing languages of bounded nets are regular |
+| `Equivalence` | bisimilarity and HML equivalence of markings |
 
 ## Plans and notes
 
