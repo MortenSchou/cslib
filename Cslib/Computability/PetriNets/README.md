@@ -36,6 +36,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `BackwardCoverability` | the backward coverability iteration and its termination (specialisations of the generic `WSTS` ones) |
 | `Unboundedness` | a net is unbounded iff some reachable marking reaches a strictly larger one (the König half is the generic `WSTS.exists_pump_of_infinite_reachable`) |
 | [`WSTS`](WSTS.lean) | nets as well-structured transition systems; `instWSTS` over finitely many places, and the characterisation of infinite firing sequences via [`Computability/WSTS`](../WSTS) |
+| `SoundnessNotions` | workflow nets (`IsWFNet`) and the weak, `k`-, relaxed, lazy and easy notions of soundness |
+| `Soundness` | soundness of workflow nets ⟺ short circuit live and bounded |
 
 ## Plans and notes
 

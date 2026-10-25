@@ -123,6 +123,8 @@ public import Cslib.Computability.PetriNets.Coverability
 public import Cslib.Computability.PetriNets.CoverabilityBasis
 public import Cslib.Computability.PetriNets.Monotonicity
 public import Cslib.Computability.PetriNets.Semantics
+public import Cslib.Computability.PetriNets.Soundness
+public import Cslib.Computability.PetriNets.SoundnessNotions
 public import Cslib.Computability.PetriNets.Unboundedness
 public import Cslib.Computability.PetriNets.WSTS
 public import Cslib.Computability.QueryComplexity.Defs
