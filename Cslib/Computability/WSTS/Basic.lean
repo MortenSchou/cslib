@@ -73,19 +73,6 @@ namespace WSTS
 
 variable {State : Type u} {Label : Type v} [Preorder State] {lts : LTS State Label}
 
-omit [Preorder State] in
-/-- A single step is a reachability step. -/
-theorem canReach_of_tr {s s' : State} {μ : Label} (h : lts.Tr s μ s') : lts.CanReach s s' :=
-  ⟨[μ], .stepL h .refl⟩
-
-omit [Preorder State] in
-/-- Reachability is transitive. -/
-theorem canReach_trans {s₁ s₂ s₃ : State} (h₁ : lts.CanReach s₁ s₂) (h₂ : lts.CanReach s₂ s₃) :
-    lts.CanReach s₁ s₃ :=
-  let ⟨μs₁, h₁⟩ := h₁
-  let ⟨μs₂, h₂⟩ := h₂
-  ⟨μs₁ ++ μs₂, LTS.MTr.comp _ h₁ h₂⟩
-
 variable (lts)
 
 /-- A state `t` is coverable from `s` if some state reachable from `s` is at least `t`. -/

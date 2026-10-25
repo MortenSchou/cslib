@@ -157,10 +157,7 @@ theorem reachable_start [Fintype P] :
 then `s'` is reachable from the initial state. -/
 theorem reachable_stable [Fintype P] {s s' : State P M S}
     (hr : a.Reachable inp s) (hc : a.lts.CanReach s s') : a.Reachable inp s' := by
-  obtain ⟨xs, _⟩ := hr
-  obtain ⟨xs', _⟩ := hc
-  use xs ++ xs'
-  grind [LTS.MTr.comp]
+  exact LTS.CanReach.trans hr hc
 
 /-- If `p` is decided on the boolean value `b` in `s` and `s'` is reachable from `s`,
 then `p` is still decided on `b` in `s'`. -/

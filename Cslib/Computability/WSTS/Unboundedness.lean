@@ -55,11 +55,6 @@ theorem finite_unlabelledTr [lts.FinitelyBranching] (s : State) :
   rintro s' ⟨μ, h⟩
   exact Set.mem_iUnion.2 ⟨⟨μ, s', h⟩, h⟩
 
-/-- A single unlabelled step is a reachability step. -/
-theorem canReach_of_unlabelledTr {s s' : State} (h : lts.UnlabelledTr s s') : lts.CanReach s s' :=
-  let ⟨_, h⟩ := h
-  canReach_of_tr h
-
 variable [PartialOrder State] [WellQuasiOrderedLE State]
 
 /-- Without a pumping pair, the states mutually reachable with a reachable state `s` are finite:
@@ -71,8 +66,8 @@ theorem scc_finite {s₀ s : State}
   let f := Set.Infinite.natEmbedding _ hinf
   obtain ⟨i, j, hij, hle⟩ := wellQuasiOrdered_le fun n => (f n).1
   have hne : (f i).1 ≠ (f j).1 := fun h => hij.ne (f.injective (Subtype.ext h))
-  refine hnp (f i).1 (f j).1 (canReach_trans hs (f i).2.1)
-    (canReach_trans (f i).2.2 (f j).2.1) ?_
+  refine hnp (f i).1 (f j).1 (hs.trans (f i).2.1)
+    ((f i).2.2.trans (f j).2.1) ?_
   exact lt_of_le_of_ne hle hne
 
 /-- Without a pumping pair, a reachable state with infinitely many successors can reach another
@@ -88,29 +83,27 @@ theorem exists_next [lts.FinitelyBranching] {s₀ s : State}
       ⋃ s' ∈ {s' | lts.CanReach s s' ∧ lts.CanReach s' s},
         ⋃ y ∈ {y | lts.UnlabelledTr s' y ∧ ¬ lts.CanReach y s}, {z | lts.CanReach y z} := by
     intro z hz
-    have key : ∀ z, Relation.ReflTransGen lts.UnlabelledTr s z →
+    have key : ∀ z, lts.CanReach s z →
         (lts.CanReach s z ∧ lts.CanReach z s) ∨
         ∃ s', (lts.CanReach s s' ∧ lts.CanReach s' s) ∧ ∃ y, lts.UnlabelledTr s' y ∧
           ¬ lts.CanReach y s ∧ lts.CanReach y z := by
       intro z hz
-      induction hz with
+      induction hz using LTS.CanReach.induction_on with
       | refl => exact Or.inl ⟨.refl lts s, .refl lts s⟩
-      | tail hz hstep ih =>
-        rename_i z' w
+      | @tail z' w _ hstep ih =>
         rcases ih with hs | ⟨s', hs', y, hy, hn, hyz⟩
         · by_cases hw : lts.CanReach w s
-          · exact Or.inl ⟨canReach_trans hs.1 (canReach_of_unlabelledTr hstep), hw⟩
+          · exact Or.inl ⟨hs.1.tail hstep, hw⟩
           · exact Or.inr ⟨z', hs, w, hstep, hw, .refl lts w⟩
-        · exact Or.inr ⟨s', hs', y, hy, hn, canReach_trans hyz (canReach_of_unlabelledTr hstep)⟩
-    rcases key z ((LTS.reflTransGen_unlabelledTr_iff lts).2 hz) with
-        hs | ⟨s', hs', y, hy, hn, hyz⟩
+        · exact Or.inr ⟨s', hs', y, hy, hn, hyz.tail hstep⟩
+    rcases key z hz with hs | ⟨s', hs', y, hy, hn, hyz⟩
     · exact Or.inl hs
     · exact Or.inr (Set.mem_biUnion hs' (Set.mem_biUnion ⟨hy, hn⟩ hyz))
   refine hinf (((hscc.union (hscc.biUnion fun s' hs' => ?_))).subset hsub)
   refine ((finite_unlabelledTr s').subset
     fun y (hy : y ∈ {y | lts.UnlabelledTr s' y ∧ ¬ lts.CanReach y s}) => hy.1).biUnion
     fun y hy => ?_
-  exact hcon y (canReach_trans hs'.1 (canReach_of_unlabelledTr hy.1)) hy.2
+  exact hcon y (hs'.1.tail hy.1) hy.2
 
 /-- In a finitely branching transition system on a well-quasi-ordered partial order, infinitely
 many reachable states give a pumping pair: a reachable state that reaches a strictly larger one. -/
@@ -124,7 +117,7 @@ theorem exists_pump_of_infinite_reachable [lts.FinitelyBranching] {s₀ : State}
   have hS : ∀ s ∈ S, ∃ y ∈ S, lts.CanReach s y ∧ ¬ lts.CanReach y s := by
     rintro s ⟨hs, hinf⟩
     obtain ⟨y, hy, hn, hyinf⟩ := exists_next hnp hs hinf
-    exact ⟨y, ⟨canReach_trans hs hy, hyinf⟩, hy, hn⟩
+    exact ⟨y, ⟨hs.trans hy, hyinf⟩, hy, hn⟩
   choose! next hnextS hnextR hnextN using hS
   let g : ℕ → S := fun n =>
     Nat.rec ⟨s₀, .refl lts s₀, hR⟩
@@ -137,13 +130,13 @@ theorem exists_pump_of_infinite_reachable [lts.FinitelyBranching] {s₀ : State}
     intro i j hij
     induction j, hij using Nat.le_induction with
     | base => exact .refl lts _
-    | succ j _ ih => exact canReach_trans ih (hstep j)
+    | succ j _ ih => exact ih.trans (hstep j)
   obtain ⟨i, j, hij, hle⟩ := wellQuasiOrdered_le f
   have heq : f i = f j := by
     by_contra hne
     exact hnp _ _ (hf0 i) (hfwd i j hij.le) (lt_of_le_of_ne hle hne)
   have hback : lts.CanReach (f (i + 1)) (f i) := by
-    refine canReach_trans (hfwd (i + 1) j hij) ?_
+    refine (hfwd (i + 1) j hij).trans ?_
     rw [← heq]
     exact .refl lts _
   exact hstepN i hback

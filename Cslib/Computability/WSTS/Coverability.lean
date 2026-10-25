@@ -103,7 +103,7 @@ theorem coverable_of_mem_backSeq {t s : State} {n : ℕ} (h : s ∈ backSeq lts 
     rcases h with h | ⟨μ, s', htr, hs'⟩
     · exact ih h
     · obtain ⟨t', hr, hle⟩ := ih hs'
-      exact ⟨t', canReach_trans (canReach_of_tr htr) hr, hle⟩
+      exact ⟨t', (LTS.CanReach.single htr).trans hr, hle⟩
 
 /-- Every coverable state appears in the backward iteration after as many steps as the shortest
 covering execution has transitions. -/
