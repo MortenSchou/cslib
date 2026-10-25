@@ -21,7 +21,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
   decidable equality of places.
 - **Semantics through `LTS`.** The marking graph of a net is an `LTS` whose labels are the
   transitions (`PetriNet.lts`). Reachability, bisimilarity, trace equivalence, and HML are therefore
-  inherited from [Foundations](../../Foundations) and [Logics](../../Logics). The marking graph is
+  inherited from [Foundations](../../Foundations) and [Logics](../../Logics), including the
+  temporal logics CTL and LTL of [Logics/Temporal](../../Logics/Temporal). The marking graph is
   deterministic, so bisimilarity of markings coincides with trace equivalence.
 - **Notation.** The scoped notation `•[N] t`, `t •[N]`, `M [t⟩[N]`, `M [t⟩[N] M'` and `M ⇝[N] M'`.
 
@@ -56,6 +57,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Decision/Reachability` | reachability and deadlock reachability for bounded nets |
 | `Decision/SoundnessNotions` | decision procedures for the notions of soundness on bounded nets |
 | `Decision/Soundness` | soundness of nets is decidable |
+| `CTL` | the marking graph as a CTL model; easy and `k`-soundness, liveness and deadlock-freeness as CTL formulas; CTL satisfaction is decidable for bounded nets |
+| `LTL` | LTL on the maximal firing sequences of a net; LTL model checking is decidable for bounded nets |
 | `SeriesReduction` | fusion of series transitions (Murata FST), under side conditions: the reduced net is weakly bisimilar to the original, and preserves reachability, deadlock-freedom, liveness, boundedness and soundness of workflow nets; deleting the isolated place gives a workflow net again (`fuseDelete`), so reducing before deciding soundness gives an equivalent question. The reduction (`fuse`, `fuseDelete`, `collapse`) is computable and its side conditions are decidable |
 | `SeriesPlaceReduction` | fusion of series places (Murata FSP), under side conditions: the same preservation results (liveness needs a producer of the first place), with the merged place holding the tokens of both places |
 | `RemovePlace` | deleting a place and restricting markings (`removePlace`, `Marking.drop`, both computable); firings, firing sequences and reachability descend to the reduced net; isolated places |

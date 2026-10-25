@@ -7,6 +7,7 @@ Authors: Morten Schou
 import Cslib.Computability.PetriNets.Automaton
 import Cslib.Computability.PetriNets.BackwardCoverability
 import Cslib.Computability.PetriNets.Basic
+import Cslib.Computability.PetriNets.CTL
 import Cslib.Computability.PetriNets.Coverability
 import Cslib.Computability.PetriNets.CoverabilityBasis
 import Cslib.Computability.PetriNets.Decision.Boundedness
@@ -18,6 +19,7 @@ import Cslib.Computability.PetriNets.Decision.SoundnessNotions
 import Cslib.Computability.PetriNets.Decision.Structure
 import Cslib.Computability.PetriNets.Equivalence
 import Cslib.Computability.PetriNets.FreeChoice
+import Cslib.Computability.PetriNets.LTL
 import Cslib.Computability.PetriNets.Monotonicity
 import Cslib.Computability.PetriNets.PlaceInvariants
 import Cslib.Computability.PetriNets.Reduction
@@ -714,6 +716,87 @@ example : joinNet.IsWFNet Pl4.i Pl4.o := by decide
 example : ∀ M, prodCons.Reachable (token producing) M → token consuming ≤ M →
     M = token consuming :=
   prodCons_wf.proper_of_completion (weakSound_iff.1 (by decide))
+
+/-! ### Temporal logics -/
+
+section CTL
+
+open Cslib.Logic Cslib.Logic.CTL
+open scoped Cslib.Logic.InferenceSystem Cslib.Logic.CTL.Formula
+
+instance : Fact (ring.Bounded {buffer}) := ⟨by decide⟩
+
+/-- Reachability is `EF`: the token of the ring can be moved to the buffer. -/
+example : ⇓CTL[ring.model,{producing} ⊨ EF (marked {buffer})] := by decide
+
+example : ¬ ⇓CTL[ring.model,{producing} ⊨ EF (marked {producing, producing})] := by
+  decide
+
+/-- The ring is deadlock-free, and every transition stays reachable: the ring is live. Both are
+`AG` formulas, decided on the finite model. -/
+example : ⇓CTL[ring.model,{producing} ⊨ AG (¬Formula.deadlock)] := by decide
+
+example : ∀ t : Tr3,
+    ⇓CTL[ring.model,{producing} ⊨ AG (EF (.atom (Atom.enabled t)))] := by decide
+
+/-- By the translation of liveness to CTL, the ring is live. -/
+example : ring.Live {producing} := fun t =>
+  liveAt_iff.2 (by revert t; decide)
+
+/-- The same holds of the deadlock-freeness. -/
+example : ∀ M, {producing} ⇝[ring] M → ¬ ring.Dead M :=
+  deadlockFree_iff_ag.2 (by decide)
+
+/-- The producer/consumer net with two producers reaches a deadlock, so it is not deadlock-free,
+and it is not live since its transitions cannot be re-enabled. -/
+example : ⇓CTL[prodCons.model,M₀ ⊨ EF Formula.deadlock] := by decide
+
+example : ¬ ∀ M, M₀ ⇝[prodCons] M → ¬ prodCons.Dead M :=
+  fun h => absurd (deadlockFree_iff_ag.1 h) (by decide)
+
+example : ¬ prodCons.LiveAt M₀ produce :=
+  fun h => absurd (liveAt_iff.1 h) (by decide)
+
+/-- Soundness is `AG EF`: the join net is weakly sound, and the choice net is not. -/
+example : joinNet.WeakSound Pl4.i Pl4.o := by
+  rw [WeakSound, kSound_iff, one_smul, one_smul]
+  decide
+
+example : ¬ choiceNet.WeakSound Pl4.i Pl4.o := by
+  rw [WeakSound, kSound_iff, one_smul, one_smul]
+  decide
+
+end CTL
+
+section LTL
+
+open Cslib.Logic.LTL
+open scoped Cslib.Logic.InferenceSystem Cslib.Logic.LTL.Formula
+
+/-- The formula saying that the marking is exactly `M`. -/
+abbrev here {Pl Tr : Type} (M : Marking Pl) : Formula (Atom Pl Tr) := .atom (.marking M)
+
+/-- The token of the ring visits the buffer infinitely often. This is `G F`, which CTL cannot
+express without fairness, but there is a single path here. -/
+example : ⇓LTL[ring.model,{producing} ⊨∀
+    G F (here (Tr := Tr3) {buffer})] := by decide
+
+example : ¬ ⇓LTL[ring.model,{producing} ⊨∀
+    F G (here (Tr := Tr3) {buffer})] := by decide
+
+/-- Every maximal run of the producer/consumer net with two items ends in the dead marking where
+both are consumed, and stays there. -/
+example : ⇓LTL[prodCons.model,M₀ ⊨∀
+    F G (here (Tr := Tr) {consuming, consuming})] := by decide
+
+/-- The nets are not deadlock-free, and the first transition fires first on some run. -/
+example : ⇓LTL[prodCons.model,M₀ ⊨∃
+    X (here (Tr := Tr) {producing, buffer})] := by decide
+
+example : ¬ ⇓LTL[prodCons.model,M₀ ⊨∃
+    X (here (Tr := Tr) {buffer, buffer, buffer})] := by decide
+
+end LTL
 
 /-! ### Reductions of places and transitions -/
 
