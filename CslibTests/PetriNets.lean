@@ -24,6 +24,8 @@ import Cslib.Computability.PetriNets.Reduction
 import Cslib.Computability.PetriNets.ReductionTransition
 import Cslib.Computability.PetriNets.RemovePlace
 import Cslib.Computability.PetriNets.Semantics
+import Cslib.Computability.PetriNets.SeriesPlaceReduction
+import Cslib.Computability.PetriNets.SeriesReduction
 import Cslib.Computability.PetriNets.Soundness
 import Cslib.Computability.PetriNets.SoundnessNotions
 import Cslib.Computability.PetriNets.StateEquation
@@ -744,5 +746,22 @@ example : twinProduce.ParallelTransitions true false := by decide
 
 example : (twinProduce.removeTransition false).Live {producing} ↔ twinProduce.Live {producing} :=
   ParallelTransitions.live_removeTransition_iff (t₁ := true) (by decide)
+
+/-! In `prodCons`, `produce → buffer → consume` is a series of transitions, and
+`buffer → consume → consuming` is a series of places. -/
+
+example : prodCons.IsSeries produce consume buffer := by decide
+
+example : prodCons.IsSeriesPlace consume buffer consuming := by decide
+
+/-- Fusing the series is computable: the fused `produce` moves the token to `consuming` at once. -/
+example : (prodCons.fuse consume buffer).post ⟨produce, by decide⟩ = {consuming} := by decide
+
+example : (prodCons.fuseDelete consume buffer).pre ⟨produce, by decide⟩ =
+    {⟨producing, by decide⟩} := by decide
+
+/-- The fused net is live exactly when `prodCons` is. -/
+example : (prodCons.fuse consume buffer).Live {producing} ↔ prodCons.Live {producing} :=
+  IsSeries.live_fuse_iff (t₁ := produce) (by decide) (by decide)
 
 end CslibTests

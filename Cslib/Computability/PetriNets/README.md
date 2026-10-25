@@ -56,6 +56,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Decision/Reachability` | reachability and deadlock reachability for bounded nets |
 | `Decision/SoundnessNotions` | decision procedures for the notions of soundness on bounded nets |
 | `Decision/Soundness` | soundness of nets is decidable |
+| `SeriesReduction` | fusion of series transitions (Murata FST), under side conditions: the reduced net is weakly bisimilar to the original, and preserves reachability, deadlock-freedom, liveness, boundedness and soundness of workflow nets; deleting the isolated place gives a workflow net again (`fuseDelete`), so reducing before deciding soundness gives an equivalent question. The reduction (`fuse`, `fuseDelete`, `collapse`) is computable and its side conditions are decidable |
+| `SeriesPlaceReduction` | fusion of series places (Murata FSP), under side conditions: the same preservation results (liveness needs a producer of the first place), with the merged place holding the tokens of both places |
 | `RemovePlace` | deleting a place and restricting markings (`removePlace`, `Marking.drop`, both computable); firings, firing sequences and reachability descend to the reduced net; isolated places |
 | `Reduction` | Murata's reduction of places: redundant (implicit) places, self-loop places, parallel places and isolated places; deleting a redundant place preserves firing sequences (bisimilarity), deadlocks and liveness, and `N` is bounded iff the reduced net and the deleted place are |
 | `ReductionTransition` | fusion of parallel transitions; preserves reachable markings, bisimilarity of the labelled marking graph, liveness, boundedness and deadlocks |

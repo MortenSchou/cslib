@@ -48,7 +48,10 @@ bounded exactly when the net is, provided the deleted place is bounded too (whic
 - `PetriNet.ParallelPlaces.redundantPlace`: of two parallel places, the one with more tokens is
   redundant (*fusion of parallel places*).
 
-Fusion of parallel transitions is in `Cslib.Computability.PetriNets.ReductionTransition`.
+Fusion of parallel transitions is in `Cslib.Computability.PetriNets.ReductionTransition`, and
+fusion of series transitions and of series places is in
+`Cslib.Computability.PetriNets.SeriesReduction` and
+`Cslib.Computability.PetriNets.SeriesPlaceReduction`.
 
 ## References
 
