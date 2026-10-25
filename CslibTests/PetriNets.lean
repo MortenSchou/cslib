@@ -20,6 +20,9 @@ import Cslib.Computability.PetriNets.Equivalence
 import Cslib.Computability.PetriNets.FreeChoice
 import Cslib.Computability.PetriNets.Monotonicity
 import Cslib.Computability.PetriNets.PlaceInvariants
+import Cslib.Computability.PetriNets.Reduction
+import Cslib.Computability.PetriNets.ReductionTransition
+import Cslib.Computability.PetriNets.RemovePlace
 import Cslib.Computability.PetriNets.Semantics
 import Cslib.Computability.PetriNets.Soundness
 import Cslib.Computability.PetriNets.SoundnessNotions
@@ -707,5 +710,39 @@ example : joinNet.IsWFNet Pl4.i Pl4.o := by decide
 example : ∀ M, prodCons.Reachable (token producing) M → token consuming ≤ M →
     M = token consuming :=
   prodCons_wf.proper_of_completion (weakSound_iff.1 (by decide))
+
+/-! ### Reductions of places and transitions -/
+
+/-- `produce` needs a token in `producing` and one in `buffer`, which are parallel places; `consume`
+empties `consuming`. -/
+def twinNet : PetriNet Pl Tr where
+  pre | produce => {producing, buffer} | consume => {consuming}
+  post | produce => {consuming} | consume => 0
+
+example : twinNet.ParallelPlaces producing buffer := by decide
+
+example : ¬ prodCons.IsIsolated buffer := by decide
+
+/-- Deleting a place is computable: here on markings and on the net. -/
+example : Marking.drop producing ({producing, buffer, buffer} : Marking Pl) =
+    {⟨buffer, by decide⟩, ⟨buffer, by decide⟩} := by decide
+
+example : (twinNet.removePlace producing).pre produce = {⟨buffer, by decide⟩} := by decide
+
+/-- With as many tokens in `producing` as in `buffer`, the place `producing` is redundant, so it can
+be deleted without changing the firing sequences. -/
+example : (twinNet.removePlace producing).lts.traces
+    (Marking.drop producing {producing, buffer}) = twinNet.lts.traces {producing, buffer} :=
+  (ParallelPlaces.redundantPlace (q := buffer) (by decide) (by decide)).traces_eq
+
+/-- Two copies of `produce`. -/
+def twinProduce : PetriNet Pl Bool where
+  pre _ := {producing}
+  post _ := {buffer}
+
+example : twinProduce.ParallelTransitions true false := by decide
+
+example : (twinProduce.removeTransition false).Live {producing} ↔ twinProduce.Live {producing} :=
+  ParallelTransitions.live_removeTransition_iff (t₁ := true) (by decide)
 
 end CslibTests

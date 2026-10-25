@@ -96,6 +96,27 @@ theorem Marking.mul_le_weight [DecidableEq Place] (w : Place → ℕ) (M : Marki
   have := Marking.weight_mono w (Multiset.le_count_iff_replicate_le.1 (le_refl (M.count p)))
   simpa [Marking.weight_apply, mul_comm] using this
 
+/-- Weight is monotone: if `A` has at most as many tokens as `B` in every place with nonzero weight,
+then `A` weighs less. -/
+theorem Marking.weight_le_weight [DecidableEq Place] {w : Place → ℕ} {A B : Marking Place}
+    (h : ∀ q, w q ≠ 0 → A.count q ≤ B.count q) : Marking.weight w A ≤ Marking.weight w B := by
+  rw [← Multiset.filter_add_not (fun q => w q = 0) A, map_add,
+    weight_eq_zero_of fun q hq => (Multiset.mem_filter.1 hq).2, zero_add]
+  refine Marking.weight_mono w (Multiset.le_iff_count.2 fun q => ?_)
+  rw [Multiset.count_filter]
+  split_ifs with hq
+  · exact Nat.zero_le _
+  · exact h q hq
+
+/-- The weighting that is `1` at `p` and `0` elsewhere counts the tokens in `p`. -/
+theorem Marking.weight_ite_eq [DecidableEq Place] (p : Place) (M : Marking Place) :
+    Marking.weight (fun q => if q = p then 1 else 0) M = M.count p := by
+  induction M using Multiset.induction with
+  | empty => simp
+  | cons a M ih =>
+    rw [← Multiset.singleton_add, map_add, ih, Multiset.count_add, Multiset.count_singleton]
+    simp [Marking.weight_apply, eq_comm]
+
 /-- A positive invariant bounds the tokens in every place by the initial weighted token count. -/
 theorem IsInvariant.kBounded (hw : N.IsInvariant w) (hpos : ∀ p, 0 < w p)
     (M₀ : Marking Place) : N.KBounded M₀ (Marking.weight w M₀) := by
