@@ -132,6 +132,7 @@ public import Cslib.Computability.PetriNets.Decision.Coverability
 public import Cslib.Computability.PetriNets.Decision.Language
 public import Cslib.Computability.PetriNets.Decision.Reachability
 public import Cslib.Computability.PetriNets.Decision.Reduced
+public import Cslib.Computability.PetriNets.Decision.ReducedStubborn
 public import Cslib.Computability.PetriNets.Decision.ReductionFin
 public import Cslib.Computability.PetriNets.Decision.ReductionSearch
 public import Cslib.Computability.PetriNets.Decision.Soundness

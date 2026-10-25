@@ -78,6 +78,7 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `Decision/Ample` | stubborn sets as ample sets for safety: with visible transitions and a bounded level function as cycle proviso, reachability and invariants of predicates insensitive to invisible transitions are preserved by the reduced graph (finite firing sequences); instances of the generic [`LTS.IsAmple`](../../Foundations/Semantics/LTS/AmpleSets.lean) theory |
 | `Decision/AmpleLTL` | the same selector preserves LTL without next-time on all and on some maximal firing sequence (finite and infinite), for the observed atoms that invisible transitions do not change; an instance of the generic [`LTL.allPaths_reduced_iff`](../../Logics/Temporal/LTL/AmpleSets.lean) |
 | `Decision/AmplePlaces` | the same for LTL over the atoms `k ≤ M.count p` of the tokens of places, with the transitions that change the observed places as visible transitions; a maximal path of the reduced graph stays in a closed level of the computed reduced reachable markings |
+| `Decision/ReducedStubborn` | the two reductions composed: a dead marking is reachable in `N` iff the graph of the reduced net `N'` (a certificate `ReducesTo N M₀ N' M₀'`, or the automatic search) reduced by the computed stubborn sets reaches one; deadlock reachability and deadlock-freedom are decided on a closed level of that graph, given explicitly or found by search for a bounded net |
 
 ## Plans and notes
 
@@ -117,6 +118,18 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 - Not searched for: redundant (implicit) places in general, fusion of parallel transitions with
   differing weights, self-loop transitions without a twin outside the boundedness search, and
   unboundedness. Deleting self-loop transitions is not part of `ReducesWF`.
+
+- Combining the structural reduction with stubborn sets (`Decision/ReducedStubborn`). The two
+  shrink different things: series fusions remove the positions inside a chain of transitions, and
+  stubborn sets remove the interleavings of the independent transitions that are left. Applied
+  to `k` independent chains of `len` transitions (`CslibTests.ReducedStubborn`), the net has
+  `(len + 1) ^ k` reachable markings, the reduced net `2 ^ k`, and the stubborn-reduced graph of
+  the reduced net `k + 1`. Reachable deadlocks are preserved by both, so the composition decides
+  deadlock reachability and deadlock-freedom. What each reduction preserves otherwise: boundedness
+  and liveness only by the structural reduction (stubborn sets may leave out the firings that a
+  liveness or boundedness witness needs); linear temporal properties without next-time over
+  observed atoms only by stubborn sets (`Decision/AmpleLTL`), since the structural reduction
+  deletes places. No combined statement is made for those properties.
 
 - Not yet formalised: reachability for unbounded nets, the Karp–Miller tree, coloured and
   inhibitor-arc nets, a decision procedure for generalized soundness (the notion is defined, and

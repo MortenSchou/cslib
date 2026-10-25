@@ -43,6 +43,7 @@ import CslibTests.PetriNets
 import CslibTests.Query
 import CslibTests.QueryComplexity
 import CslibTests.ReducedDecisions
+import CslibTests.ReducedStubborn
 import CslibTests.Reduction
 import CslibTests.RedundantPlaceSoundness
 import CslibTests.StatefulProcesses
