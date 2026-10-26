@@ -17,11 +17,14 @@ public import Mathlib.Computability.Partrec
 This file states and proves the theorem that reachability of Petri nets (equivalently, of vector
 addition systems with states) is decidable; see the README of this directory.
 
-In classical logic `Decidable P` is vacuous, so the theorem is stated as a computability
-statement about the encoded instances of `ReachabilityInstance`:
-`ReachabilityDecidable` says that the predicate `ReachInstance.Reachable` on instances is
-`ComputablePred` in the sense of Mathlib (its indicator is a computable function).
-By `reachabilityDecidable_iff` this is the conjunction of two semi-decidability statements:
+A `Decidable` instance cannot state this theorem: classically every proposition has one
+(`Classical.dec`), so `Nonempty (Decidable P)` says nothing, and whether a particular instance is an
+algorithm is checked by the compiler, not by the kernel. The theorem is therefore stated as a
+computability statement about the encoded instances of `ReachabilityInstance`: the predicate
+`ReachInstance.Reachable` is `ComputablePred` in the sense of Mathlib. That is a `DecidablePred`
+together with a proof that its indicator function is `Computable`; the computational content is in
+the proof, so any instance (even a classical one) may fill the first component.
+By `computablePred_reachable_iff` this is the conjunction of two semi-decidability statements:
 
 - `reachable_rePred`: `REPred Reachable`. A semi-decision procedure enumerates all
   finite sequences of transition indices and runs each of them (`runL`), which is primitive
@@ -31,16 +34,18 @@ By `reachabilityDecidable_iff` this is the conjunction of two semi-decidability 
   non-reachability of that VAS is recursively enumerable by Leroux's Presburger inductive
   invariants (`Cslib.Computability.VAS.Decidable`).
 
-## Main definitions
-
-- `PetriNet.ReachabilityDecidable`: the statement of the theorem.
+Every net with places `Fin d` and transitions `Fin n` is an instance (`ReachInstance.ofNet`,
+`ReachInstance.reachable_ofNet`), so a single computable function decides reachability of all such
+nets (`exists_computable_iff_reachable`).
 
 ## Main statements
 
-- `PetriNet.reachabilityDecidable_iff`: decidability is semi-decidability of reachability and of
+- `PetriNet.computablePred_reachable_iff`: decidability is semi-decidability of reachability and of
   non-reachability.
 - `PetriNet.reachable_rePred`: reachability is recursively enumerable.
-- `PetriNet.reachabilityDecidable`: **reachability in Petri nets is decidable**.
+- `PetriNet.computablePred_reachable`: **reachability in Petri nets is decidable**.
+- `PetriNet.exists_computable_iff_reachable`: the same for nets with places `Fin d` and transitions
+  `Fin n`, stated through `ReachInstance.ofNet`.
 
 ## References
 
@@ -105,10 +110,6 @@ theorem primrec_accepts : PrimrecPred fun p : ReachInstance × List ℕ => p.1.A
 
 end ReachInstance
 
-/-- The statement of the theorem that reachability is decidable: the predicate `Reachable` on
-encoded instances has a computable indicator function. -/
-def ReachabilityDecidable : Prop := ComputablePred ReachInstance.Reachable
-
 /-- Reachability is recursively enumerable: this is the easy half of the decidability of
 reachability. -/
 theorem reachable_rePred : REPred ReachInstance.Reachable :=
@@ -118,19 +119,30 @@ theorem reachable_rePred : REPred ReachInstance.Reachable :=
 
 /-- Reachability is decidable iff both reachability and non-reachability are recursively
 enumerable. By `reachable_rePred` the remaining part of the theorem is `REPred (¬ Reachable)`. -/
-theorem reachabilityDecidable_iff : ReachabilityDecidable ↔
+theorem computablePred_reachable_iff : ComputablePred ReachInstance.Reachable ↔
     REPred ReachInstance.Reachable ∧ REPred fun I : ReachInstance => ¬ I.Reachable :=
   ComputablePred.computable_iff_re_compl_re'
 
 /-- **Reachability in Petri nets is decidable**: the predicate that holds of a coded net with an
 initial and a target marking when the target is reachable from the initial marking is computable.
 Non-reachability of an instance is semi-decided by translating it to a coded VAS with a lock
-(`ReachInstance.lockInput`) and searching for a Presburger inductive invariant as a certificate. -/
-theorem reachabilityDecidable : ReachabilityDecidable := by
-  refine reachabilityDecidable_iff.2 ⟨reachable_rePred, ?_⟩
+(`ReachInstance.lockInput`) and searching for a Presburger inductive invariant as a certificate.
+For nets of the library, see `exists_computable_iff_reachable`. -/
+theorem computablePred_reachable : ComputablePred ReachInstance.Reachable := by
+  refine computablePred_reachable_iff.2 ⟨reachable_rePred, ?_⟩
   have h1 : REPred fun I : ReachInstance => ¬ (ReachInstance.lockInput I).Reaches :=
     VAS.not_reaches_rePred.comp ReachInstance.primrec_lockInput.to_comp
   exact h1.of_eq fun I => not_congr ReachInstance.reachable_iff_reaches_lockInput.symm
+
+/-- **Reachability is decidable for nets with places `Fin d` and transitions `Fin n`**: a single
+computable function of the encoded instance `ReachInstance.ofNet N M M'` decides `M ⇝[N] M'`, for
+all `d`, `n`, nets `N` and markings `M`, `M'`. -/
+theorem exists_computable_iff_reachable :
+    ∃ f : ReachInstance → Bool, Computable f ∧
+      ∀ {d n : ℕ} (N : PetriNet (Fin d) (Fin n)) (M M' : Marking (Fin d)),
+        f (ReachInstance.ofNet N M M') = true ↔ M ⇝[N] M' := by
+  obtain ⟨_, hc⟩ := computablePred_reachable
+  exact ⟨_, hc, fun N M M' => by rw [decide_eq_true_iff, ReachInstance.reachable_ofNet]⟩
 
 end PetriNet
 
