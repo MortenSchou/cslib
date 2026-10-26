@@ -59,4 +59,6 @@ algorithm and its termination.
   decidability of other properties (inevitability, simulation preorders), and WSTS in the
   literature such as lossy channel systems and broadcast protocols.
 - `decidableCoverable` searches with `searchIter`
-  ([`Search`](../../Foundations/Data/Search.lean)), so it reduces under `decide`.
+  ([`Search`](../../Foundations/Data/Search.lean)), so it reduces under `decide`; this is how
+  coverability of Petri nets is evaluated in `CslibTests/PetriNets` (the pred-basis is
+  `PetriNets/Decision/Coverability`).

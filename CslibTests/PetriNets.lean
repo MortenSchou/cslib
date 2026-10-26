@@ -8,6 +8,8 @@ import Cslib.Computability.PetriNets.BackwardCoverability
 import Cslib.Computability.PetriNets.Basic
 import Cslib.Computability.PetriNets.Coverability
 import Cslib.Computability.PetriNets.CoverabilityBasis
+import Cslib.Computability.PetriNets.Decision.Boundedness
+import Cslib.Computability.PetriNets.Decision.Coverability
 import Cslib.Computability.PetriNets.Monotonicity
 import Cslib.Computability.PetriNets.Semantics
 import Cslib.Computability.PetriNets.Unboundedness
@@ -195,5 +197,62 @@ example : prodCons.Coverable {producing} {consuming} :=
 example : ∃ n, prodCons.backStep (prodCons.backSeq {consuming} n) = prodCons.backSeq {consuming} n ∧
     ∀ M₀, prodCons.Coverable M₀ {consuming} ↔ M₀ ∈ prodCons.backSeq {consuming} n :=
   exists_backSeq_fixpoint _
+
+/-! ### Computable firing
+
+Markings are multisets, so firing is computable and the properties of the net can be decided. -/
+
+/-- The computable firing function agrees with the firing relation. -/
+example : prodCons.fire? {producing} produce = some {buffer} :=
+  fire?_eq_some_iff.2 fires_produce
+
+/-- Two items in the system. -/
+def M₀ : Marking Pl := {producing, producing}
+
+example : M₀ [produce⟩[prodCons] := by decide
+example : ¬ M₀ [consume⟩[prodCons] := by decide
+
+example : (prodCons.run M₀ [produce, consume]).isSome = true := by decide
+example : (prodCons.run M₀ [consume]).isNone = true := by decide
+example : prodCons.run M₀ [produce, produce, consume] = some {buffer, consuming} := by
+  decide
+
+/-- The computable firing function witnesses the firing relation. -/
+example : M₀ [produce⟩[prodCons] {producing, buffer} :=
+  fire?_eq_some_iff.1 (by decide)
+
+/-- Enabledness and firing are decided directly. -/
+example : ({producing} : Marking Pl) [produce⟩[prodCons] := by decide
+
+example : M₀ [produce⟩[prodCons] {producing, buffer} := by decide
+
+/-- Reachability is witnessed by a computed run. -/
+example : ({producing} : Marking Pl) ⇝[prodCons] {consuming} :=
+  ⟨[produce, consume], run_eq_some_iff.1 (by decide)⟩
+
+/-! ### Decidable coverability -/
+
+/-- The backward iteration from `{consuming}` has stabilised after two steps. -/
+example : WSTS.Stable prodCons.predBasis
+    (WSTS.basisSeq prodCons.predBasis ({consuming} : Marking Pl) 2) := by decide
+
+/-- `{producing}` can cover `{consuming}`. -/
+example : prodCons.Coverable {producing} {consuming} := by decide
+
+/-- The empty marking cannot cover `{consuming}`. -/
+example : ¬ prodCons.Coverable 0 {consuming} := by decide
+
+/-! ### Decidable boundedness -/
+
+/-- The reachable markings of the producer/consumer net from `M₀` stop growing after four steps. -/
+example : prodCons.Closed M₀ 4 := by decide
+
+/-- The source net has a pumping pair already within one step. -/
+example : source.PumpWithin 0 1 := by decide
+
+/-- Boundedness is decided outright, in both directions. -/
+example : prodCons.Bounded M₀ := by decide
+
+example : ¬ source.Bounded 0 := by decide
 
 end CslibTests

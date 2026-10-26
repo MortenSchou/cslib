@@ -15,7 +15,8 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
   Markings are multisets of places, as in the Petri net literature, so places and transitions can
   be arbitrary types, finite or infinite, and markings are written `{a, b, b}`.
 - **One definition, computable.** Multisets are computable as soon as places have decidable
-  equality, so the same `PetriNet` is used for the theory and for tests checked by `decide`.
+  equality, so the same `PetriNet` is used for the theory, for the verified decision procedures
+  (the files in `Decision/`) and for tests checked by `decide`.
   Notions that do not count tokens (enabling, firing, reachability, boundedness, …) do not assume
   decidable equality of places.
 - **Semantics through `LTS`.** The marking graph of a net is an `LTS` whose labels are the
@@ -36,6 +37,9 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 | `BackwardCoverability` | the backward coverability iteration and its termination (specialisations of the generic `WSTS` ones) |
 | `Unboundedness` | a net is unbounded iff some reachable marking reaches a strictly larger one (the König half is the generic `WSTS.exists_pump_of_infinite_reachable`) |
 | [`WSTS`](WSTS.lean) | nets as well-structured transition systems; `instWSTS` over finitely many places, and the characterisation of infinite firing sequences via [`Computability/WSTS`](../WSTS) |
+| `Decision/Coverability` | decidable coverability for nets over finitely many places: the net-specific predecessor basis `•[N] t + (b - t •[N])` fed to the generic `WSTS.decidableCoverable` |
+| `Decision/Boundedness` | decidable boundedness for nets over finitely many places |
+| [`Search`](../../Foundations/Data/Search.lean) | `searchIter`/`searchNat`: searches that `decide` can evaluate, used by the decision procedures |
 
 ## Plans and notes
 
