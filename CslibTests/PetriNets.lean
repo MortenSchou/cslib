@@ -4,8 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Morten Schou
 -/
 
+import Cslib.Computability.PetriNets.BackwardCoverability
 import Cslib.Computability.PetriNets.Basic
+import Cslib.Computability.PetriNets.Coverability
+import Cslib.Computability.PetriNets.CoverabilityBasis
+import Cslib.Computability.PetriNets.Monotonicity
 import Cslib.Computability.PetriNets.Semantics
+import Cslib.Computability.PetriNets.Unboundedness
 
 namespace CslibTests
 
@@ -109,5 +114,86 @@ example : prodCons.run {producing} [produce, consume] = some {consuming} := by d
 /-- A run of the computable rule is a firing sequence of the marking graph. -/
 example : prodCons.lts.MTr {producing} [produce, consume] {consuming} :=
   run_eq_some_iff.1 (by decide)
+
+/-! ### Monotonicity -/
+
+theorem fires_produce : ({producing} : Marking Pl) [produce⟩[prodCons] {buffer} :=
+  ⟨0, rfl, rfl⟩
+
+theorem fires_consume : ({buffer} : Marking Pl) [consume⟩[prodCons] {consuming} :=
+  ⟨0, rfl, rfl⟩
+
+/-- Extra tokens never disable a transition. -/
+example : ({producing, consuming} : Marking Pl) [produce⟩[prodCons] :=
+  (show ({producing} : Marking Pl) [produce⟩[prodCons] from le_rfl).mono (by decide)
+
+/-- A firing sequence can be replayed from a larger marking, reaching a larger marking. -/
+example : ∃ M', prodCons.lts.MTr {producing, consuming} [produce] M' ∧ {buffer} ≤ M' :=
+  mTr_mono (.single _ fires_produce) (by decide)
+
+/-- The net is bounded at every marking, hence at the smaller marking `{producing}`. -/
+example : prodCons.Bounded {producing} :=
+  (prodCons_conservative.kBounded _).bounded
+
+/-! ### Coverability and unboundedness -/
+
+/-- A source transition that creates a token from nothing. -/
+def source : PetriNet Unit Unit where
+  pre _ := 0
+  post _ := {()}
+
+theorem source_fires (M : Marking Unit) : M [()⟩[source] (M + {()}) :=
+  ⟨M, (zero_add M).symm, rfl⟩
+
+/-- The source net is unbounded, by pumping from the empty marking. -/
+theorem source_unbounded : ¬ source.Bounded 0 :=
+  not_bounded_of_pump (.refl _ _) (source_fires 0).reachable (Multiset.lt_cons_self 0 ())
+
+/-- By the characterisation of unbounded nets, the source net has a pumping pair. -/
+example : ∃ M₁ M₂, 0 ⇝[source] M₁ ∧ M₁ ⇝[source] M₂ ∧ M₁ < M₂ :=
+  exists_pump_of_not_bounded source_unbounded
+
+/-- The producer/consumer net is bounded, so no reachable marking can be pumped. -/
+example (M₀ : Marking Pl) : ¬ ∃ M₁ M₂, M₀ ⇝[prodCons] M₁ ∧ M₁ ⇝[prodCons] M₂ ∧ M₁ < M₂ :=
+  bounded_iff_no_pump.1 (prodCons_conservative.kBounded _).bounded
+
+/-- Every marking is coverable from every marking in the source net. -/
+theorem source_coverable (M₀ M : Marking Unit) : source.Coverable M₀ M := by
+  have hreach : ∀ n : ℕ, M₀ ⇝[source] (M₀ + n • {()}) := by
+    intro n
+    induction n with
+    | zero => simpa using Reachable.refl source M₀
+    | succ n ih =>
+      refine ih.trans (Fires.reachable (t := ()) ?_)
+      have := source_fires (M₀ + n • {()})
+      rwa [succ_nsmul, ← add_assoc]
+  refine ⟨_, hreach M.card, ?_⟩
+  rw [Multiset.nsmul_singleton, ← Multiset.eq_replicate_card.2 fun _ _ => rfl]
+  exact Multiset.le_add_left _ _
+
+/-- Hence every finite basis for coverability on the source net contains the empty marking. -/
+example (M : Marking Unit) : ∃ B : Set (Marking Unit), B.Finite ∧ (0 : Marking Unit) ∈ B ∧
+    ∀ M₀, source.Coverable M₀ M ↔ ∃ b ∈ B, b ≤ M₀ := by
+  obtain ⟨B, hB, hiff⟩ := exists_finite_basis_coverable (N := source) M
+  obtain ⟨b, hb, hb0⟩ := (hiff 0).1 (source_coverable 0 M)
+  have hb' : b = 0 := Multiset.le_zero.1 hb0
+  exact ⟨B, hB, hb' ▸ hb, hiff⟩
+
+/-- Backward coverability on the producer/consumer net: `{buffer}` is a predecessor of the target
+`{consuming}` after one step, and `{producing}` after two. -/
+theorem producing_mem_backSeq : {producing} ∈ prodCons.backSeq {consuming} 2 := by
+  have h1 : {buffer} ∈ prodCons.backSeq {consuming} 1 := by
+    rw [backSeq_succ]
+    exact Or.inr ⟨consume, _, fires_consume, show _ ∈ Set.Ici _ from Set.mem_Ici.2 le_rfl⟩
+  rw [backSeq_succ]
+  exact Or.inr ⟨produce, _, fires_produce, h1⟩
+
+example : prodCons.Coverable {producing} {consuming} :=
+  coverable_of_mem_backSeq producing_mem_backSeq
+
+/-- The backward iteration reaches a fixpoint that is exactly the coverable markings. -/
+example : ∃ n, prodCons.backStep (prodCons.backSeq {consuming} n) = prodCons.backSeq {consuming} n ∧
+    ∀ M₀, prodCons.Coverable M₀ {consuming} ↔ M₀ ∈ prodCons.backSeq {consuming} n :=
+  exists_backSeq_fixpoint _
 
 end CslibTests

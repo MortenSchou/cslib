@@ -30,6 +30,12 @@ This directory formalises **place/transition (P/T) Petri nets** and their basic 
 |------|----------|
 | `Basic` | nets, markings, enabling, firing, the computable firing rule; notation |
 | `Semantics` | marking graph, reachability, boundedness, safeness, liveness, conservative nets |
+| `Monotonicity` | adding tokens preserves firing (`StronglyMonotone` for every net); boundedness is downward closed |
+| `Coverability` | coverability (`WSTS.Coverable` of the marking graph) and the pumping lemma; Dickson's lemma for multisets |
+| `CoverabilityBasis` | upward-closed sets of markings have finite bases |
+| `BackwardCoverability` | the backward coverability iteration and its termination (specialisations of the generic `WSTS` ones) |
+| `Unboundedness` | a net is unbounded iff some reachable marking reaches a strictly larger one (the König half is the generic `WSTS.exists_pump_of_infinite_reachable`) |
+| [`WSTS`](WSTS.lean) | nets as well-structured transition systems; `instWSTS` over finitely many places, and the characterisation of infinite firing sequences via [`Computability/WSTS`](../WSTS) |
 
 ## Plans and notes
 
